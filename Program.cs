@@ -6,7 +6,7 @@ namespace Genspil
 {
     internal class Program
     {
-        // Deklarér boardGames som et statisk felt
+        // Deklarér boardGames
         private static List<BoardGame> boardGames;
 
         public static void Main(string[] args)
@@ -111,7 +111,6 @@ namespace Genspil
                     break;
                 Console.WriteLine("Ugyldigt input. Indtast en gyldig pris.");
             }
-
             // Opret produkt og tilføj til boardgame'et
             Product newProduct = new Product(id, status, price);
             game.AddProduct(newProduct);
