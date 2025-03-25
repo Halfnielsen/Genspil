@@ -1,0 +1,15 @@
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\bin\Debug\net8.0\Genspil.exe
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\bin\Debug\net8.0\Genspil.deps.json
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\bin\Debug\net8.0\Genspil.runtimeconfig.json
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\bin\Debug\net8.0\Genspil.dll
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\bin\Debug\net8.0\Genspil.pdb
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\obj\Debug\net8.0\Genspil.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\obj\Debug\net8.0\Genspil.AssemblyInfoInputs.cache
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\obj\Debug\net8.0\Genspil.AssemblyInfo.cs
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\obj\Debug\net8.0\Genspil.csproj.CoreCompileInputs.cache
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\obj\Debug\net8.0\Genspil.sourcelink.json
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\obj\Debug\net8.0\Genspil.dll
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\obj\Debug\net8.0\refint\Genspil.dll
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\obj\Debug\net8.0\Genspil.pdb
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\obj\Debug\net8.0\Genspil.genruntimeconfig.cache
+C:\Users\ehell\Desktop\Datamatiker\1. semester\Genspil\Genspil\obj\Debug\net8.0\ref\Genspil.dll
