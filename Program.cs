@@ -11,6 +11,9 @@ namespace Genspil
 
         public static void Main(string[] args)
         {
+<<<<<<< HEAD
+            
+=======
             boardGames = new List<BoardGame>
             {
                 new BoardGame("Catan", "Standard", "Strategy", 3, 4, "English"),
@@ -145,6 +148,7 @@ namespace Genspil
             Console.WriteLine("\nOpdateret BoardGame:");
             Console.WriteLine(selectedGame);
             Console.ReadLine();
+>>>>>>> main
         }
     }
 }
