@@ -1,0 +1,15 @@
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\bin\Debug\net8.0\Genspil.exe
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\bin\Debug\net8.0\Genspil.deps.json
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\bin\Debug\net8.0\Genspil.runtimeconfig.json
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\bin\Debug\net8.0\Genspil.dll
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\bin\Debug\net8.0\Genspil.pdb
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\obj\Debug\net8.0\Genspil.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\obj\Debug\net8.0\Genspil.AssemblyInfoInputs.cache
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\obj\Debug\net8.0\Genspil.AssemblyInfo.cs
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\obj\Debug\net8.0\Genspil.csproj.CoreCompileInputs.cache
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\obj\Debug\net8.0\Genspil.sourcelink.json
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\obj\Debug\net8.0\Genspil.dll
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\obj\Debug\net8.0\refint\Genspil.dll
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\obj\Debug\net8.0\Genspil.pdb
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\obj\Debug\net8.0\Genspil.genruntimeconfig.cache
+C:\Users\Khadr\OneDrive\Skrivebord\Programmering\Genspil- khadra\Genspil\obj\Debug\net8.0\ref\Genspil.dll
