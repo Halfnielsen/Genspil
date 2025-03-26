@@ -20,7 +20,7 @@ namespace Genspil
         public void ShowBoardGameList()
         {
             Console.WriteLine("Brætspil:");
-            BoardGameList.ForEach(Console.WriteLine);
+            Console.WriteLine(bg => Console.WriteLine(bg.Name));
         }
 
 
@@ -37,6 +37,8 @@ namespace Genspil
 
         public void AddBoardGame(BoardGame newBoardGame)
         {
+            Console.WriteLine("Indtast navn:");
+            string BoardGame.Name = Console.ReadLine(); 
             BoardGameList.Add(newBoardGame);
             Console.WriteLine($"{newBoardGame.Name} er nu tilføjet.");
         }
