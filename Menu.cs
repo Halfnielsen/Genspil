@@ -8,13 +8,14 @@ using Genspil;
 namespace Genspil
 {
     public static class Menu
-    {
+    {/*
         private static List<BoardGame> dummyBoardGames = new List<BoardGame>
           {
           new BoardGame("Ticket to Ride", "1st Ed.", "Family", 2, 10, "Engelsk"),
           new BoardGame("Carcassonne", "3rd Ed.", "Strategy", 2, 5, "Tysk"),
           new BoardGame("Catan", "5th Ed.", "Strategy", 3, 15, "Dansk")
           };
+        */
         private static int selectedIndex = 0;
         private static readonly string[] menuOptions = { "Søg", "Vis alle brætspil", "Tilføj nyt brætspil", "Rediger brætspil",
     "Administrer produkt", "Opret forespørgsler", "Vis forespørgsler for et spil",
@@ -463,7 +464,7 @@ namespace Genspil
       */
        
     }
-
+    /*
     public class BoardGame
     {
         public string Name { get; set; }
@@ -487,7 +488,7 @@ namespace Genspil
 
         public override string ToString() => $"{Name} ({Edition})";
     }
-
+    */
     public class Employee
     {
         public string Name { get; set; }

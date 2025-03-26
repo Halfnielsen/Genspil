@@ -7,8 +7,8 @@ namespace Genspil
         // Properties
         
         public string Name { get; private set; }
-        public string Email { get; set; }
-        public int Phone { get; set; }
+        public string Email { get; private set; }
+        public int Phone { get; private set; }
 
         // Constructor
         public Customer(string name, string email, int phone)
