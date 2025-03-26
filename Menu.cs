@@ -8,12 +8,7 @@ namespace Genspil
 {
     public static class Menu
     {
-        private static List<BoardGame> dummyBoardGames = new List<BoardGame>
-         {
-         new BoardGame("Ticket to Ride", "1st Ed.", "Family", 2, 10, "Engelsk"),
-         new BoardGame("Carcassonne", "3rd Ed.", "Strategy", 2, 5, "Tysk"),
-         new BoardGame("Catan", "5th Ed.", "Strategy", 3, 15, "Dansk")
-         };
+        
         private static int selectedIndex = 0;
         private static readonly string[] menuOptions = { "Søg", "Vis alle brætspil", "Tilføj nyt brætspil", "Rediger brætspil",
     "Administrer produkt", "Opret forespørgsler", "Vis forespørgsler for et spil",
@@ -239,15 +234,15 @@ namespace Genspil
         {
             Console.WriteLine("Vælg et spil at lave en forespørgsel til:\n");
 
-            for (int i = 0; i < dummyBoardGames.Count; i++)
+            for (int i = 0; i < BoardGame.Count; i++)
             {
-                Console.WriteLine($"[{i + 1}] {dummyBoardGames[i].Name}");
+                Console.WriteLine($"[{i + 1}] {BoardGame[i].Name}");
             }
 
             Console.Write("\nIndtast nummeret på spillet: ");
-            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= dummyBoardGames.Count)
+            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= BoardGame.Count)
             {
-                var selectedGame = dummyBoardGames[choice - 1];
+                var selectedGame = BoardGame[choice - 1];
 
                 // Dummy-objekter
                 var dummyCustomer = new Customer("Test Kunde", "test@kunde.dk", 12345678);
@@ -277,15 +272,15 @@ namespace Genspil
         {
             Console.WriteLine("Vælg et spil for at se dets forespørgsler:\n");
 
-            for (int i = 0; i < dummyBoardGames.Count; i++)
+            for (int i = 0; i < BoardGames.Count; i++)
             {
-                Console.WriteLine($"[{i + 1}] {dummyBoardGames[i].Name}");
+                Console.WriteLine($"[{i + 1}] {BoardGames[i].Name}");
             }
 
             Console.Write("\nIndtast nummeret på spillet: ");
-            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= dummyBoardGames.Count)
+            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= BoardGames.Count)
             {
-                var selectedGame = dummyBoardGames[choice - 1];
+                var selectedGame = BoardGames[choice - 1];
                 Console.WriteLine($"\nForespørgsler for '{selectedGame.Name}':");
 
                 if (selectedGame.Requests.Count == 0)
@@ -312,7 +307,7 @@ namespace Genspil
             Console.WriteLine("Alle forespørgsler på tværs af spil:\n");
 
             int total = 0;
-            foreach (var game in dummyBoardGames)
+            foreach (var game in BoardGames)
             {
                 foreach (var req in game.Requests)
                 {
@@ -328,32 +323,117 @@ namespace Genspil
 
             Console.ReadKey();
         }
+        //anettes
+        //Metode til valg af boardgame
+        public static BoardGame SelectBoardGame(string action)
+        {
+            Console.WriteLine($"Vælg et boardgame, som du vil {action}:");
+            for (int i = 0; i < boardGames.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {boardGames[i].Name}");
+            }
+            int selectedIndex = GetValidInt("Indtast nummeret for det ønskede boardgame: ", 1, boardGames.Count);
+            return boardGames[selectedIndex - 1];
+        }
 
+        // Henter og validerer brugerens valg af boardgame eller andet af int.
+        public static int GetValidInt(string prompt, int min = int.MinValue, int max = int.MaxValue)
+        {
+            int value;
+            while (true)
+            {
+                Console.Write(prompt);
+                if (int.TryParse(Console.ReadLine(), out value) && value >= min && value <= max)
+                {
+                    break;
+                }
+                Console.WriteLine($"Ugyldigt input. Indtast et heltal mellem {min} og {max}.");
+            }
+            return value;
+        }
 
-    }
-    public class Customer
-    {
-        public string Name { get; set; }
-        public Customer(string name, string email, int phone) => Name = name;
-    }
+        // Tilføjer et nyt produkt til et valgt boardgame
+        public static void AddNewProduct()
+        {
+            // Vis en liste og lad brugeren vælge et boardgame
+            Console.WriteLine("Vælg et boardgame, som du vil tilføje et nyt produkt til:");
+            for (int i = 0; i < boardGames.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {boardGames[i].Name}");
+            }
 
-    public class Employee
-    {
-        public string Name { get; set; }
-        public Employee(string name, string email, int phone) => Name = name;
+            int selectedIndex = GetValidInt("Indtast nummeret for det ønskede boardgame: ", 1, boardGames.Count);
+            BoardGame selectedGame = boardGames[selectedIndex - 1];
+            Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
+
+            // Tilføj et nyt produkt til det valgte boardgame
+            UserInputAddNewProduct(selectedGame);
+
+            // Udskriv det opdaterede boardgame med alle dets produkter
+            Console.WriteLine("\nOpdateret BoardGame:");
+            Console.WriteLine(selectedGame);
+            Console.ReadLine();
+        }
+        // Læser produktoplysninger fra konsollen, opretter et nyt Product-objekt og tilføjer det til det angivne boardgame.
+        public static void UserInputAddNewProduct(BoardGame game)
+        {
+            // Indtast produkt ID
+            int id;
+            while (true)
+            {
+                Console.Write("Indtast produkt ID: ");
+                if (int.TryParse(Console.ReadLine(), out id))
+                    break;
+                Console.WriteLine("Ugyldigt input. Indtast et heltal for produkt ID.");
+            }
+
+            // Indtast produkt status
+            Console.Write("Indtast produkt status: ");
+            string status = Console.ReadLine() ?? "";
+
+            // Indtast produkt pris
+            double price;
+            while (true)
+            {
+                Console.Write("Indtast produkt pris (f.eks. 49.99): ");
+                if (double.TryParse(Console.ReadLine(), out price))
+                    break;
+                Console.WriteLine("Ugyldigt input. Indtast en gyldig pris.");
+            }
+            // Opret produkt og tilføj til boardgame'et
+            Product newProduct = new Product(id, status, price);
+            game.AddProduct(newProduct);
+            Console.WriteLine("\nNyt produkt er tilføjet!");
+        }
+        //Ændring af boardgame detaljer
+        public static void UpdateBoardGameDetails()
+        {
+            // Vælg boardgame
+            BoardGame selectedGame = SelectBoardGame("opdatere");
+            Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
+
+            // Hent nye detaljer
+            Console.Write("Nyt navn: ");
+            string newName = Console.ReadLine();
+            Console.Write("Ny udgave: ");
+            string newEdition = Console.ReadLine();
+            Console.Write("Ny genre: ");
+            string newGenre = Console.ReadLine();
+            int newMinPlayerCount = GetValidInt("Ny minimum antal spillere: ", 1);
+            int newMaxPlayerCount = GetValidInt($"Ny maksimum antal spillere (skal være mindst {newMinPlayerCount}): ", newMinPlayerCount);
+            Console.Write("Nyt sprog: ");
+            string newLanguage = Console.ReadLine();
+
+            // Opdater boardgame
+            selectedGame.UpdateDetails(newName, newEdition, newGenre, newMinPlayerCount, newMaxPlayerCount, newLanguage);
+
+            // Udskriv opdateret boardgame
+            Console.WriteLine("\nOpdateret BoardGame:");
+            Console.WriteLine(selectedGame);
+            Console.ReadLine();
+
+        }
     }
-    public class Product
-    {
-        public string Name { get; set; }
-        public Product(string name, string email, int phone) => Name = name;
-    }
-    public class BoardGame
-    {
-        public string Name { get; set; }
-        public BoardGame(string name, string edition, string genre, int playerCount, int count, string language)
-            => Name = name;
-        public List<Product> Products { get; set; }
-        public List<Request> Requests { get; set; } = new List<Request>();
-    }
+    
 
 }
