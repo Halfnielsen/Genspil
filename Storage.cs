@@ -8,32 +8,57 @@ namespace Genspil
 {
     internal class Storage
     {
-        List<string> BoardGameList = new List<string>();
+        List<BoardGame> BoardGameList = new List<BoardGame>();
 
         public Storage() 
         {
-            BoardGameList.Add("Sequence");
-            BoardGameList.Add("Ticket to Ride");
-            BoardGameList.Add("7 Wonders");
-            BoardGameList.Add("Alverdens");
-            BoardGameList.Add("A la carte: Dessert");
-            BoardGameList.Add("Bad People");
+            
         }
 
 
 
         public void ShowBoardGameList()
         {
-            Console.WriteLine($"Brætspil:");
+            Console.WriteLine("Brætspil:");
             BoardGameList.ForEach(Console.WriteLine);
         }
 
 
         public void ShowAvalaibleBoardGames()
         {
-            
+            foreach (BoardGame game in BoardGameList)
+            {
+                if (game.Count > 0)
+                {
+                    Console.WriteLine(game.Name);
+                }
+            }
         }
 
+        public void AddBoardGame(BoardGame newBoardGame)
+        {
+            BoardGameList.Add(newBoardGame);
+            Console.WriteLine($"{newBoardGame.Name} er nu tilføjet.");
+        }
 
+        public void Search()
+        {
+
+        }
+
+        public void ShowProductList()
+        {
+
+        }
+        
+        public void PrintProductList()
+        {
+
+        }
+    
+    
+    
+    
     }
+
 }
