@@ -6,13 +6,7 @@ namespace Genspil
 {
     internal class Program
     {
-        // Deklarér boardGames
-        private static List<BoardGame> boardGames;
-
-        public static void Main(string[] args)
-        {
-
-            // Deklarér boardGames som et statisk felt
+       // Deklarér boardGames som et statisk felt
         private static List<BoardGame> boardGames;
 
         public static void Main(string[] args)
