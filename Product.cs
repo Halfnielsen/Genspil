@@ -11,7 +11,7 @@ namespace Genspil
 {
 
 
-    internal class Product
+    public class Product
     {
         private int id;
         private string status;
