@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Genspil
 {
-    internal class Storage
+    public class Storage
     {
         List<BoardGame> BoardGameList = new List<BoardGame>();
 

@@ -11,22 +11,21 @@ namespace Genspil
 {
 
 
-    internal class Product
+    public class Product
     {
+        private static int nextId = 1;
         private int id;
         private string status;
         private double price;
 
         
-        public Product(int id, string status, double price)
+        public Product(string status, double price)
         {
-            this.id = id;
+            this.id = nextId++;
             this.status = status;
             this.price = price;
         }
         public int getId() { return id;}
-        public void setId(int id) { this.id = id;}
-        
         public string getStatus() { return status;}
         public void setStatus(string status) { this.status = status;}
        
