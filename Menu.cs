@@ -8,7 +8,7 @@ namespace Genspil
 {
     public static class Menu
     {
-        
+        private static List<BoardGame> boardGames;
         private static int selectedIndex = 0;
         private static readonly string[] menuOptions = { "Søg", "Vis alle brætspil", "Tilføj nyt brætspil", "Rediger brætspil",
     "Administrer produkt", "Opret forespørgsler", "Vis forespørgsler for et spil",
@@ -16,6 +16,18 @@ namespace Genspil
 
         public static void MainMenu()
         {
+            boardGames = new List<BoardGame>
+            {
+                new BoardGame("Catan", "Standard", "Strategy", 3, 4, "English"),
+                new BoardGame("Ticket to Ride", "Deluxe", "Family", 2, 5, "English")
+            };
+
+            // Tilføj nogle produkter til hvert boardgame
+            boardGames[0].AddProduct(new Product(1, "God", 75));
+            boardGames[0].AddProduct(new Product(2, "Okay", 40));
+            boardGames[1].AddProduct(new Product(3, "God", 75));
+            boardGames[1].AddProduct(new Product(4, "God", 75));
+
             Console.CursorVisible = false;
             bool running = true;
             int previousIndex = -1;
@@ -234,15 +246,15 @@ namespace Genspil
         {
             Console.WriteLine("Vælg et spil at lave en forespørgsel til:\n");
 
-            for (int i = 0; i < BoardGame.Count; i++)
+            for (int i = 0; i < boardGames.Count; i++)
             {
-                Console.WriteLine($"[{i + 1}] {BoardGame[i].Name}");
+                Console.WriteLine($"[{i + 1}] {boardGames[i].Name}");
             }
 
             Console.Write("\nIndtast nummeret på spillet: ");
-            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= BoardGame.Count)
+            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= boardGames.Count)
             {
-                var selectedGame = BoardGame[choice - 1];
+                var selectedGame = boardGames[choice - 1];
 
                 // Dummy-objekter
                 var dummyCustomer = new Customer("Test Kunde", "test@kunde.dk", 12345678);
@@ -272,15 +284,15 @@ namespace Genspil
         {
             Console.WriteLine("Vælg et spil for at se dets forespørgsler:\n");
 
-            for (int i = 0; i < BoardGames.Count; i++)
+            for (int i = 0; i < boardGames.Count; i++)
             {
-                Console.WriteLine($"[{i + 1}] {BoardGames[i].Name}");
+                Console.WriteLine($"[{i + 1}] {boardGames[i].Name}");
             }
 
             Console.Write("\nIndtast nummeret på spillet: ");
-            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= BoardGames.Count)
+            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= boardGames.Count)
             {
-                var selectedGame = BoardGames[choice - 1];
+                var selectedGame = boardGames[choice - 1];
                 Console.WriteLine($"\nForespørgsler for '{selectedGame.Name}':");
 
                 if (selectedGame.Requests.Count == 0)
@@ -325,7 +337,7 @@ namespace Genspil
         }
         //anettes
         //Metode til valg af boardgame
-        public static BoardGame SelectBoardGame(string action)
+        internal static BoardGame SelectBoardGame(string action)
         {
             Console.WriteLine($"Vælg et boardgame, som du vil {action}:");
             for (int i = 0; i < boardGames.Count; i++)
@@ -375,7 +387,7 @@ namespace Genspil
             Console.ReadLine();
         }
         // Læser produktoplysninger fra konsollen, opretter et nyt Product-objekt og tilføjer det til det angivne boardgame.
-        public static void UserInputAddNewProduct(BoardGame game)
+        internal static void UserInputAddNewProduct(BoardGame game)
         {
             // Indtast produkt ID
             int id;
@@ -433,6 +445,19 @@ namespace Genspil
             Console.ReadLine();
 
         }
+        public class Customer
+        {
+            public string Name { get; set; }
+            public Customer(string name, string email, int phone) => Name = name;
+        }
+
+        public class Employee
+        {
+            public string Name { get; set; }
+            public Employee(string name, string email, int phone) => Name = name;
+        }
+        
+       
     }
     
 
