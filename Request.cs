@@ -11,7 +11,7 @@ namespace Genspil
         // Relations
         public Customer Customer { get; set; }
         public Employee Employee { get; set; }
-        public BoardGame BoardGame { get; set; }
+        internal BoardGame BoardGame { get; set; }
 
         // Constructor
         public Request(int requestID, DateTime date)
