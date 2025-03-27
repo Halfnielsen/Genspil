@@ -49,8 +49,8 @@ namespace Genspil
         public override string ToString()
         {
             string productsStr = string.Join(Environment.NewLine, Products.Select(p => p.ToString()));
-            return $"BoardGame{{ Spilnavn='{Name}', Udgave='{Edition}', Genre='{Genre}', " +
-                   $"Antal spillere={MinPlayerCount}-{MaxPlayerCount}, Sprog='{Language}', \nProdukter:{Environment.NewLine}{productsStr}\n}}";
+            return $"Spilnavn: {Name}, Udgave: {Edition}, Genre: {Genre}, Antal spillere: {MinPlayerCount}-{MaxPlayerCount}, Sprog: {Language}\n" +
+                   $"Produkter:\n{productsStr}";
         }
 
         // Metode til at opdatere boardgame detaljer
@@ -89,6 +89,16 @@ namespace Genspil
                     Console.WriteLine(request.ToString());
                 }
             }
+        }
+
+        public bool CheckAvailability()
+        {
+            return Products.Any(p => p.getStatus().ToLower() == "på lager");
+        }
+
+        public List<Product> GetAvailableProducts()
+        {
+            return Products.Where(p => p.getStatus().ToLower() == "på lager").ToList();
         }
     }
 }

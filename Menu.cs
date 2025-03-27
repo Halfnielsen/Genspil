@@ -449,10 +449,27 @@ namespace Genspil
             Console.WriteLine("\nNyt produkt er tilføjet!");
         }
 
-        
-      
-       
-    }
+
+        public static void AvailableProductsForSelectedGame()
+        {
+            BoardGame selectedGame = SelectBoardGame("se tilgængelige produkter for");
+
+            if (selectedGame.CheckAvailability())
+            {
+                List<Product> availableProducts = selectedGame.GetAvailableProducts();
+
+                Console.WriteLine($"Følgende produkter er på lager for spillet '{selectedGame.Name}':");
+                foreach (Product product in availableProducts)
+                {
+                    Console.WriteLine($"- {product}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Ingen produkter på lager for spillet '{selectedGame.Name}'.");
+            }
+
+        }
    
     public class Employee
     {
