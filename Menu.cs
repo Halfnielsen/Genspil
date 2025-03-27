@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Genspil;
 
 namespace Genspil
 {
     public static class Menu
-    {
-        private static List<BoardGame> boardGames;
+    {/*
+        private static List<BoardGame> dummyBoardGames = new List<BoardGame>
+          {
+          new BoardGame("Ticket to Ride", "1st Ed.", "Family", 2, 10, "Engelsk"),
+          new BoardGame("Carcassonne", "3rd Ed.", "Strategy", 2, 5, "Tysk"),
+          new BoardGame("Catan", "5th Ed.", "Strategy", 3, 15, "Dansk")
+          };
+        */
         private static int selectedIndex = 0;
         private static readonly string[] menuOptions = { "Søg", "Vis alle brætspil", "Tilføj nyt brætspil", "Rediger brætspil",
     "Administrer produkt", "Opret forespørgsler", "Vis forespørgsler for et spil",
@@ -16,6 +23,7 @@ namespace Genspil
 
         public static void MainMenu()
         {
+
             boardGames = new List<BoardGame>
             {
                 new BoardGame("Catan", "Standard", "Strategy", 3, 4, "English"),
@@ -27,6 +35,10 @@ namespace Genspil
             boardGames[0].AddNewProduct(new Product("Okay", 40));
             boardGames[1].AddNewProduct(new Product("God", 75));
             boardGames[1].AddNewProduct(new Product("God", 75));
+
+            
+          
+
 
             Console.CursorVisible = false;
             bool running = true;
@@ -192,9 +204,7 @@ namespace Genspil
                 Console.WriteLine();
             }
         }
-
-
-        
+                
         private static void Search()
         {
 
@@ -242,12 +252,11 @@ namespace Genspil
             Console.Clear();
             MainMenu();
         }
-        
-        //IKKE FÆRDIG!!! - hvad gør vi med customer og employee? Skal vi tilføje autogenereret ID ligesom i products?
         private static void AddRequest()
         {
             BoardGame selectedGame = SelectBoardGame("lave en forespørgsel på: ");
             Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
+
 
             // Indtast kundeinformation
             Console.Write("\nIndtast kundens navn: ");
@@ -267,11 +276,58 @@ namespace Genspil
             int customerID = selectedGame.Requests.Count + 1; // Skal vi også have et customer ID???? Midlertidig ID (du kan lave global ID senere)
             var customer = new Customer(name, email, phone);
 
+            for (int i = 0; i < dummyBoardGames.Count; i++)
+            {
+                Console.WriteLine($"[{i + 1}] {dummyBoardGames[i].Name}");
+            }
+
+            Console.Write("\nIndtast nummeret på spillet: ");
+            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= dummyBoardGames.Count)
+            {
+                var selectedGame = dummyBoardGames[choice - 1];
+
+                // Indtast kundeinformation
+                Console.Write("\nIndtast kundens navn: ");
+                string name = Console.ReadLine();
+
+                Console.Write("Indtast kundens email: ");
+                string email = Console.ReadLine();
+
+                int phone;
+                while (true)
+                {
+                    Console.Write("Indtast kundens telefonnummer: ");
+                    if (int.TryParse(Console.ReadLine(), out phone)) break;
+                    Console.WriteLine("Ugyldigt nummer, prøv igen.");
+                }
+
+                int customerID = selectedGame.Requests.Count + 1; // Midlertidig ID (du kan lave global ID senere)
+                var customer = new Customer(name, email, phone);
+
+                // Dummy-employee indtil medarbejdersystem er klar
+                var dummyEmployee = new Employee("Test Medarbejder", "medarbejder@firma.dk", 87654321);                
+
+                int requestID = selectedGame.Requests.Count + 1;
+                var newRequest = new Request(requestID, DateTime.Now)
+                {
+                    Customer = customer,
+                    Employee = dummyEmployee,
+                    BoardGame = selectedGame
+                };
+
+
             // Dummy-employee indtil medarbejdersystem er klar
             var dummyEmployee = new Employee("Test Medarbejder", "medarbejder@firma.dk", 87654321);
 
+
             int requestID = selectedGame.Requests.Count + 1;
             var newRequest = new Request(requestID, DateTime.Now)
+
+                Console.WriteLine($"\n Forespørgsel oprettet til '{selectedGame.Name}':");
+                Console.WriteLine(newRequest);
+            }
+            else
+
             {
                 Customer = customer,
                 Employee = dummyEmployee,
@@ -284,37 +340,38 @@ namespace Genspil
             Console.ReadLine();
             }
 
+
         // skal den hedde showrequestspergame eller showrequests?
         private static void ShowRequestsPerGame()
         {
             BoardGame selectedGame = SelectBoardGame("se forespørgsler for");
             Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
+            selectedGame.ShowGameRequests();
+            Console.ReadKey();
+        }
+
+        private static void ShowRequestsPerGame()
+        {
+            Console.WriteLine("Vælg et spil for at se dets forespørgsler:\n");
+
+            for (int i = 0; i < dummyBoardGames.Count; i++)
+            {
+                Console.WriteLine($"[{i + 1}] {dummyBoardGames[i].Name}");
+            }
+
+            Console.Write("\nIndtast nummeret på spillet: ");
+            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= dummyBoardGames.Count)
+            {
+                var selectedGame = dummyBoardGames[choice - 1];
+                Console.WriteLine($"\nForespørgsler for '{selectedGame.Name}':");
+
 
             selectedGame.ShowGameRequests();
             Console.ReadLine();
 
         }
-        private static void ShowAllRequests()
-        {
-            Console.WriteLine("Alle forespørgsler på tværs af spil:\n");
-
-            int total = 0;
-            foreach (var game in boardGames)
-            {
-                foreach (var req in game.Requests)
-                {
-                    Console.WriteLine($"[Spil: {game.Name}] {req}");
-                    total++;
-                }
-            }
-
-            if (total == 0)
-            {
-                Console.WriteLine("Ingen forespørgsler fundet.");
-            }
-
-            Console.ReadKey();
-        }
+        
+       
         //anettes
         //Metode til valg af boardgame
         internal static BoardGame SelectBoardGame(string action)
@@ -397,21 +454,39 @@ namespace Genspil
             Console.WriteLine(selectedGame);
             Console.ReadLine();
 
-        }
-        public class Customer
-        {
-            public string Name { get; set; }
-            public Customer(string name, string email, int phone) => Name = name;
-        }
-
-        public class Employee
-        {
-            public string Name { get; set; }
-            public Employee(string name, string email, int phone) => Name = name;
-        }
-        
+        }  
+      */
        
     }
-    
+    /*
+    public class BoardGame
+    {
+        public string Name { get; set; }
+        public string Edition { get; set; }
+        public string Genre { get; set; }
+        public int MinPlayerCount { get; set; }
+        public int MaxPlayerCount { get; set; }
+        public string Language { get; set; }
+
+        public List<Request> Requests { get; set; } = new List<Request>();
+
+        public BoardGame(string name, string edition, string genre, int minPlayers, int maxPlayers, string language)
+        {
+            Name = name;
+            Edition = edition;
+            Genre = genre;
+            MinPlayerCount = minPlayers;
+            MaxPlayerCount = maxPlayers;
+            Language = language;
+        }
+
+        public override string ToString() => $"{Name} ({Edition})";
+    }
+    */
+    public class Employee
+    {
+        public string Name { get; set; }
+        public Employee(string name, string email, int phone) => Name = name;
+    }
 
 }

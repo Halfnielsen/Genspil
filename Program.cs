@@ -11,6 +11,7 @@ namespace Genspil
 
         public static void Main(string[] args)
         {
+            /*
             boardGames = new List<BoardGame>
             {
                 new BoardGame("Catan", "Standard", "Strategy", 3, 4, "English"),
@@ -18,13 +19,21 @@ namespace Genspil
             };
 
             // Tilføj nogle produkter til hvert boardgame
+
             boardGames[0].AddNewProduct(new Product("God", 75));
             boardGames[0].AddNewProduct(new Product("Okay", 40));
             boardGames[1].AddNewProduct(new Product("God", 75));
             boardGames[1].AddNewProduct(new Product("God", 75));
 
 
-            
+
+            boardGames[0].AddProduct(new Product(1, "God", 75));
+            boardGames[0].AddProduct(new Product(2, "Okay", 40));
+            boardGames[1].AddProduct(new Product(3, "God", 75));
+            boardGames[1].AddProduct(new Product(4, "God", 75));
+            */
+            Menu.MainMenu();
+
         }
 
 
