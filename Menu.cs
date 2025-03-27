@@ -23,8 +23,22 @@ namespace Genspil
 
         public static void MainMenu()
         {
+
+            boardGames = new List<BoardGame>
+            {
+                new BoardGame("Catan", "Standard", "Strategy", 3, 4, "English"),
+                new BoardGame("Ticket to Ride", "Deluxe", "Family", 2, 5, "English")
+            };
+
+            // Tilføj nogle produkter til hvert boardgame
+            boardGames[0].AddNewProduct(new Product("God", 75));
+            boardGames[0].AddNewProduct(new Product("Okay", 40));
+            boardGames[1].AddNewProduct(new Product("God", 75));
+            boardGames[1].AddNewProduct(new Product("God", 75));
+
             
           
+
 
             Console.CursorVisible = false;
             bool running = true;
@@ -238,10 +252,29 @@ namespace Genspil
             Console.Clear();
             MainMenu();
         }
-
         private static void AddRequest()
         {
-            Console.WriteLine("Vælg et spil at lave en forespørgsel til:\n");
+            BoardGame selectedGame = SelectBoardGame("lave en forespørgsel på: ");
+            Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
+
+
+            // Indtast kundeinformation
+            Console.Write("\nIndtast kundens navn: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Indtast kundens email: ");
+            string email = Console.ReadLine();
+
+            int phone;
+            while (true)
+            {
+                Console.Write("Indtast kundens telefonnummer: ");
+                if (int.TryParse(Console.ReadLine(), out phone)) break;
+                Console.WriteLine("Ugyldigt nummer, prøv igen.");
+            }
+
+            int customerID = selectedGame.Requests.Count + 1; // Skal vi også have et customer ID???? Midlertidig ID (du kan lave global ID senere)
+            var customer = new Customer(name, email, phone);
 
             for (int i = 0; i < dummyBoardGames.Count; i++)
             {
@@ -282,16 +315,38 @@ namespace Genspil
                     BoardGame = selectedGame
                 };
 
-                selectedGame.Requests.Add(newRequest);
+
+            // Dummy-employee indtil medarbejdersystem er klar
+            var dummyEmployee = new Employee("Test Medarbejder", "medarbejder@firma.dk", 87654321);
+
+
+            int requestID = selectedGame.Requests.Count + 1;
+            var newRequest = new Request(requestID, DateTime.Now)
 
                 Console.WriteLine($"\n Forespørgsel oprettet til '{selectedGame.Name}':");
                 Console.WriteLine(newRequest);
             }
             else
+
             {
-                Console.WriteLine("Ugyldigt valg.");
+                Customer = customer,
+                Employee = dummyEmployee,
+                BoardGame = selectedGame
+            };
+            selectedGame.AddNewRequest(newRequest);
+
+            Console.WriteLine($"\nForespørgsel er tilføjet til {selectedGame.Name}!");
+            Console.WriteLine(newRequest);
+            Console.ReadLine();
             }
 
+
+        // skal den hedde showrequestspergame eller showrequests?
+        private static void ShowRequestsPerGame()
+        {
+            BoardGame selectedGame = SelectBoardGame("se forespørgsler for");
+            Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
+            selectedGame.ShowGameRequests();
             Console.ReadKey();
         }
 
@@ -310,47 +365,13 @@ namespace Genspil
                 var selectedGame = dummyBoardGames[choice - 1];
                 Console.WriteLine($"\nForespørgsler for '{selectedGame.Name}':");
 
-                if (selectedGame.Requests.Count == 0)
-                {
-                    Console.WriteLine("Ingen forespørgsler fundet.");
-                }
-                else
-                {
-                    foreach (var req in selectedGame.Requests)
-                    {
-                        Console.WriteLine(req);
-                    }
-                }
-            }
-            else
-            {
-                Console.WriteLine("Ugyldigt valg.");
-            }
 
-            Console.ReadKey();
+            selectedGame.ShowGameRequests();
+            Console.ReadLine();
+
         }
-        private static void ShowAllRequests()
-        {
-            Console.WriteLine("Alle forespørgsler på tværs af spil:\n");
-
-            int total = 0;
-            foreach (var game in dummyBoardGames)
-            {
-                foreach (var req in game.Requests)
-                {
-                    Console.WriteLine($"[Spil: {game.Name}] {req}");
-                    total++;
-                }
-            }
-
-            if (total == 0)
-            {
-                Console.WriteLine("Ingen forespørgsler fundet.");
-            }
-
-            Console.ReadKey();
-        }
-      /*  
+        
+       
         //anettes
         //Metode til valg af boardgame
         internal static BoardGame SelectBoardGame(string action)
@@ -364,7 +385,7 @@ namespace Genspil
             return boardGames[selectedIndex - 1];
         }
 
-        // Henter og validerer brugerens valg af boardgame eller andet af int.
+        // Henter og validerer brugerens valg af boardgame
         public static int GetValidInt(string prompt, int min = int.MinValue, int max = int.MaxValue)
         {
             int value;
@@ -380,46 +401,23 @@ namespace Genspil
             return value;
         }
 
-        // Tilføjer et nyt produkt til et valgt boardgame
-        public static void AddNewProduct()
+        public static void AddProduct()
         {
-            // Vis en liste og lad brugeren vælge et boardgame
-            Console.WriteLine("Vælg et boardgame, som du vil tilføje et nyt produkt til:");
-            for (int i = 0; i < boardGames.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {boardGames[i].Name}");
-            }
-
-            int selectedIndex = GetValidInt("Indtast nummeret for det ønskede boardgame: ", 1, boardGames.Count);
-            BoardGame selectedGame = boardGames[selectedIndex - 1];
+            BoardGame selectedGame = SelectBoardGame("tilføje et nyt produkt til");
             Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
 
-            // Tilføj et nyt produkt til det valgte boardgame
             UserInputAddNewProduct(selectedGame);
 
-            // Udskriv det opdaterede boardgame med alle dets produkter
             Console.WriteLine("\nOpdateret BoardGame:");
             Console.WriteLine(selectedGame);
             Console.ReadLine();
         }
-        // Læser produktoplysninger fra konsollen, opretter et nyt Product-objekt og tilføjer det til det angivne boardgame.
+
         internal static void UserInputAddNewProduct(BoardGame game)
         {
-            // Indtast produkt ID
-            int id;
-            while (true)
-            {
-                Console.Write("Indtast produkt ID: ");
-                if (int.TryParse(Console.ReadLine(), out id))
-                    break;
-                Console.WriteLine("Ugyldigt input. Indtast et heltal for produkt ID.");
-            }
-
-            // Indtast produkt status
-            Console.Write("Indtast produkt status: ");
+            Console.Write("Indtast produkt status (på lager / reperation): ");
             string status = Console.ReadLine() ?? "";
 
-            // Indtast produkt pris
             double price;
             while (true)
             {
@@ -428,19 +426,17 @@ namespace Genspil
                     break;
                 Console.WriteLine("Ugyldigt input. Indtast en gyldig pris.");
             }
-            // Opret produkt og tilføj til boardgame'et
-            Product newProduct = new Product(id, status, price);
-            game.AddProduct(newProduct);
+
+            Product newProduct = new Product(status, price); // ID genereres automatisk
+            game.AddNewProduct(newProduct);
             Console.WriteLine("\nNyt produkt er tilføjet!");
         }
-        //Ændring af boardgame detaljer
-        public static void UpdateBoardGameDetails()
+
+        public static void EditBoardGame()
         {
-            // Vælg boardgame
             BoardGame selectedGame = SelectBoardGame("opdatere");
             Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
 
-            // Hent nye detaljer
             Console.Write("Nyt navn: ");
             string newName = Console.ReadLine();
             Console.Write("Ny udgave: ");
@@ -452,10 +448,8 @@ namespace Genspil
             Console.Write("Nyt sprog: ");
             string newLanguage = Console.ReadLine();
 
-            // Opdater boardgame
             selectedGame.UpdateDetails(newName, newEdition, newGenre, newMinPlayerCount, newMaxPlayerCount, newLanguage);
 
-            // Udskriv opdateret boardgame
             Console.WriteLine("\nOpdateret BoardGame:");
             Console.WriteLine(selectedGame);
             Console.ReadLine();
