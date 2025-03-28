@@ -70,7 +70,7 @@ namespace Genspil
             if (request != null)
             {
                 Requests.Add(request);
-                Console.WriteLine("Request tilføjet!");
+                Console.WriteLine("Forespørgsel tilføjet!");
             }
         }
 
