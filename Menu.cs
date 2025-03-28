@@ -341,6 +341,10 @@ namespace Genspil
     {
         public string Name { get; set; }
         public Employee(string name, string email, int phone) => Name = name;
+
+        public Employee()
+        {
+        }
     }
     public class Product
     {
