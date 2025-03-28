@@ -11,6 +11,7 @@ namespace Genspil
 
         public static void Main(string[] args)
         {
+
             /*
             boardGames = new List<BoardGame>
             {
