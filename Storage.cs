@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+/*
 namespace Genspil
 {
-    internal class Storage
+    public class Storage
     {
         List<BoardGame> BoardGameList = new List<BoardGame>();
 
@@ -35,11 +35,27 @@ namespace Genspil
             }
         }
 
-        public void AddBoardGame(BoardGame newBoardGame)
+        public void AddBoardGame()
         {
+            BoardGame newBoardGame = new BoardGame;
+            BoardGameList.Add(newBoardgame);
             Console.WriteLine("Indtast navn:");
-            string BoardGame.Name = Console.ReadLine(); 
-            BoardGameList.Add(newBoardGame);
+            string inputName = Console.ReadLine();
+            Console.WriteLine("Indtast udgave:");
+            string inputEdition = Console.ReadLine();
+            Console.WriteLine("Indtast minimum antal spillere:");
+            string inputMinPlayerCount = Console.ReadLine();
+            Console.WriteLine("Indtast maximum antal spillere:");
+            string inputMaxPlayerCount = Console.ReadLine();
+            Console.WriteLine("Indtast sprog:");
+            string inputLanguage = Console.ReadLine();
+
+            newBoardGame.Name = inputName;
+            newBoardGame.Edition = inputEdition;
+            newBoardGame.MinPlayerCount = inputMinPlayerCount;
+            newBoardGame.MaxPlayerCount = inputMaxPlayerCount;
+            newBoardGame.Language = inputLanguage;
+
             Console.WriteLine($"{newBoardGame.Name} er nu tilføjet.");
         }
 
@@ -64,3 +80,4 @@ namespace Genspil
     }
 
 }
+*/

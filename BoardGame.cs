@@ -6,19 +6,20 @@ using System.Threading.Tasks;
 
 namespace Genspil
 {
-    internal class BoardGame
+    public class BoardGame
     {
-        // De private felter er overflødige, hvis du bruger properties, men det er fint
-        public string Name { get; set; }
-        public string Edition { get; set; }
-        public string Genre { get; set; }
-        public int MinPlayerCount { get; set; }
-        public int MaxPlayerCount { get; set; }
-        public string Language { get; set; }
-        public List<Product> Products { get; set; }
+        //Properties
+        public string Name { get; private set; }
+        public string Edition { get; private set; }
+        public string Genre { get; private set; }
+        public int MinPlayerCount { get; private set; }
+        public int MaxPlayerCount { get; private set; }
+        public string Language { get; private set; }
+        public List<Product> Products { get; private set; }
+        public List<Request> Requests { get; private set; }
 
         // Constructor der modtager en liste af produkter
-        public BoardGame(string name, string edition, string genre, int minPlayerCount, int maxPlayerCount, string language, List<Product> products)
+        public BoardGame(string name, string edition, string genre, int minPlayerCount, int maxPlayerCount, string language, List<Product> products, List<Request> requests)
         {
             Name = name;
             Edition = edition;
@@ -27,16 +28,17 @@ namespace Genspil
             MaxPlayerCount = maxPlayerCount;
             Language = language;
             Products = products ?? new List<Product>();
+            Requests = requests ?? new List<Request>();
         }
 
         // Constructor som starter med en tom produktliste
         public BoardGame(string name, string edition, string genre, int minPlayerCount, int maxPlayerCount, string language)
-            : this(name, edition, genre, minPlayerCount, maxPlayerCount, language, new List<Product>())
+            : this(name, edition, genre, minPlayerCount, maxPlayerCount, language, new List<Product>(), new List<Request>())
         {
         }
 
         // Metode til at tilføje et produkt til boardgame
-        public void AddProduct(Product product)
+        public void AddNewProduct(Product product)
         {
             if (product != null)
             {
@@ -47,8 +49,8 @@ namespace Genspil
         public override string ToString()
         {
             string productsStr = string.Join(Environment.NewLine, Products.Select(p => p.ToString()));
-            return $"BoardGame{{ Spilnavn='{Name}', Udgave='{Edition}', Genre='{Genre}', " +
-                   $"Antal spillere={MinPlayerCount}-{MaxPlayerCount}, Sprog='{Language}', \nProdukter:{Environment.NewLine}{productsStr}\n}}";
+            return $"Spilnavn: {Name}, Udgave: {Edition}, Genre: {Genre}, Antal spillere: {MinPlayerCount}-{MaxPlayerCount}, Sprog: {Language}\n" +
+                   $"Produkter:\n{productsStr}";
         }
 
         // Metode til at opdatere boardgame detaljer
@@ -61,6 +63,42 @@ namespace Genspil
             MaxPlayerCount = newMaxPlayerCount;
             Language = newLanguage;
             Console.WriteLine($"\n{newName} er blevet opdateret!");
+        }
+
+        public void AddNewRequest(Request request)
+        {
+            if (request != null)
+            {
+                Requests.Add(request);
+                Console.WriteLine("Forespørgsel tilføjet!");
+            }
+        }
+
+        //Mangler customer og employee
+        public void ShowGameRequests()
+        {
+            if (Requests.Count == 0)
+            {
+                Console.WriteLine("Ingen requests fundet.");
+            }
+            else
+            {
+                Console.WriteLine("Requests for dette BoardGame:");
+                foreach (var request in Requests)
+                {
+                    Console.WriteLine(request.ToString());
+                }
+            }
+        }
+
+        public bool CheckAvailability()
+        {
+            return Products.Any(p => p.getStatus().ToLower() == "på lager");
+        }
+
+        public List<Product> GetAvailableProducts()
+        {
+            return Products.Where(p => p.getStatus().ToLower() == "på lager").ToList();
         }
     }
 }
