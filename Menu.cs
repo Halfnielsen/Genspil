@@ -354,7 +354,7 @@ namespace Genspil
             string newStatus = Console.ReadLine() ?? "";
 
             // Rediger produkt
-            productToEdit.editProduct(newPrice, newStatus);
+            productToEdit.EditProduct(newPrice, newStatus);
 
             Console.WriteLine("\nProdukt opdateret.");
             Console.ReadLine();            
@@ -397,16 +397,16 @@ namespace Genspil
             }
 
             Customer customer = new Customer(customerName, email, phone);
-
+            //lav valg af medarbejder
             // Dummy medarbejder
-            Employee dummyEmployee = new Employee("Test Medarbejder", "medarbejder@firma.dk", 12345678);
+            Employee Employee = new Employee("Jamal", "Amal@Genspil.dk", 30552688);
 
             // Opret forespørgsel
             int requestID = selectedGame.Requests.Count + 1;
             Request newRequest = new Request(requestID, DateTime.Now)
             {
                 Customer = customer,
-                Employee = dummyEmployee,
+                Employee = Employee,
                 BoardGame = selectedGame
             };
 
@@ -511,15 +511,17 @@ namespace Genspil
             }
 
         }
-   
-    public class Employee
-    {
-        public string Name { get; set; }
-        public Employee(string name, string email, int phone) => Name = name;
-
-        public Employee()
+   /*
+        public class Employee
         {
+             public string Name { get; set; }
+             public Employee(string name, string email, int phone) => Name = name;
+
+             public Employee()
+             {
+             }
         }
+   */
     }
 
 }
