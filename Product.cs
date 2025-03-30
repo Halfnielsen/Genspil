@@ -24,7 +24,7 @@ namespace Genspil
 
 
         
-        public Product(string status, double price)
+        public Product(string status, double price,string stand)
 
         {
             this.id = nextId++;
@@ -49,7 +49,7 @@ namespace Genspil
         public void Sell()
 
         {
-            if (status.ToLower() == "på lager")
+            if (status.ToLower() == "på lager" && stand.ToLower() == "god" || stand.ToLower() == "okay")
             {
                 status = "solgt";
                 Console.WriteLine($"Produktet med ID {id} er blevet solgt!");
@@ -58,7 +58,7 @@ namespace Genspil
             }
             else
             {
-                Console.WriteLine($"Produktet kan ikke sælges da nuværende status er {status}");
+                Console.WriteLine($"Produktet kan ikke sælges da nuværende status er {status} som er i {stand} stand");
             }
 
         }
@@ -75,7 +75,7 @@ namespace Genspil
         }
         public override string ToString()
         {
-            return $"ID: {id}, Status: {status}, Pris: {price} kr";
+            return $"ID: {id}, Status: {status}, Pris: {price} kr, Stand: {stand}";
 
         }
     }

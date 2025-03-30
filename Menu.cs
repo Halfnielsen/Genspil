@@ -9,13 +9,16 @@ namespace Genspil
 {
     public static class Menu
     {
+        
         private static List<BoardGame> dummyBoardGames = new List<BoardGame>
           {
           new BoardGame("Ticket to Ride", "1st Ed.", "Family", 2, 10, "Engelsk"),
           new BoardGame("Carcassonne", "3rd Ed.", "Strategy", 2, 5, "Tysk"),
           new BoardGame("Catan", "5th Ed.", "Strategy", 3, 15, "Dansk")
           };
+        
         private static List<BoardGame> boardGames;
+        private static Storage storage;
 
         private static int selectedIndex = 0;
         private static readonly string[] menuOptions = { "Søg", "Vis alle brætspil", "Tilføj nyt brætspil", "Rediger brætspil",
@@ -25,6 +28,7 @@ namespace Genspil
         public static void MainMenu()
         {
 
+           
             boardGames = new List<BoardGame>
             {
                 new BoardGame("Catan", "Standard", "Strategy", 3, 4, "English"),
@@ -32,12 +36,12 @@ namespace Genspil
             };
 
             // Tilføj nogle produkter til hvert boardgame
-            boardGames[0].AddNewProduct(new Product("God", 75));
-            boardGames[0].AddNewProduct(new Product("Okay", 40));
-            boardGames[1].AddNewProduct(new Product("God", 75));
-            boardGames[1].AddNewProduct(new Product("God", 75));
+            boardGames[0].AddNewProduct(new Product("på lager", 75, "god"));
+            boardGames[0].AddNewProduct(new Product("på lager", 40, "okay"));
+            boardGames[1].AddNewProduct(new Product("på lager", 75, "god"));
+            boardGames[1].AddNewProduct(new Product("på lager", 75, "god"));
 
-            
+            storage = new Storage(boardGames);  
           
 
 
@@ -167,8 +171,6 @@ namespace Genspil
         }
         private static void DrawMenu()
         {
-
-
             Console.SetCursorPosition(0, 0);
             Console.ForegroundColor = ConsoleColor.Cyan;            
             Console.WriteLine("=== Genspil ===".PadLeft(25));
@@ -219,16 +221,14 @@ namespace Genspil
         {
 
             Console.WriteLine("Søger efter spil");
-
+            storage.Search();
             Console.ReadKey();
             Console.Clear();
             MainMenu();
         }
         private static void ShowBoardGameList()
         {
-
-            Console.WriteLine("Vis alle Brætspil");
-
+            storage.ShowBoardGameList();
             Console.ReadKey();
             Console.Clear();
             MainMenu();
@@ -255,7 +255,9 @@ namespace Genspil
 
             BoardGame newGame = new BoardGame(name, edition, genre, minPlayers, maxPlayers, language);
             boardGames.Add(newGame);
-
+            storage.AddBoardGame(newGame);
+            
+            
             Console.WriteLine($"\n'{newGame.Name}' er oprettet og tilføjet til listen.");
             Console.ReadLine();
             Console.Clear();
@@ -327,7 +329,7 @@ namespace Genspil
             Console.WriteLine("\nProdukter:");
             foreach (Product p in products)
             {
-                Console.WriteLine(p); // ToString() viser ID, status og pris
+                Console.WriteLine(p); // ToString() viser ID, status pris og stand
             }
 
             // Vælg produkt-ID
@@ -342,6 +344,7 @@ namespace Genspil
             }
 
             // Brugeren indtaster ny pris og status
+            // og stand 
             double newPrice;
             while (true)
             {
@@ -352,6 +355,9 @@ namespace Genspil
 
             Console.Write("Indtast ny status (på lager / reperation / utilgængelig): ");
             string newStatus = Console.ReadLine() ?? "";
+
+            Console.Write("Indtast ny stand (god/okay/dårlig): ");
+            string newStand = Console.ReadLine() ?? "";
 
             // Rediger produkt
             productToEdit.EditProduct(newPrice, newStatus);
@@ -484,8 +490,10 @@ namespace Genspil
                     break;
                 Console.WriteLine("Ugyldigt input. Indtast en gyldig pris.");
             }
-
-            Product newProduct = new Product(status, price); // ID genereres automatisk
+            Console.Write("Indtast produktets stand (god,okay,dårlig)");
+            string stand = Console.ReadLine() ?? "";
+            
+            Product newProduct = new Product(status, price, stand); // ID genereres automatisk
             game.AddNewProduct(newProduct);
             Console.WriteLine("\nNyt produkt er tilføjet!");
         }
