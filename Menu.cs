@@ -8,36 +8,16 @@ using Genspil;
 namespace Genspil
 {
     public static class Menu
-    {/*
-        private static List<BoardGame> dummyBoardGames = new List<BoardGame>
-          {
-          new BoardGame("Ticket to Ride", "1st Ed.", "Family", 2, 10, "Engelsk"),
-          new BoardGame("Carcassonne", "3rd Ed.", "Strategy", 2, 5, "Tysk"),
-          new BoardGame("Catan", "5th Ed.", "Strategy", 3, 15, "Dansk")
-          };
-        
-        */
-        private static List<BoardGame> boardGames;
+    {
+        private static DataHandler dataHandler = new DataHandler();
         private static int selectedIndex = 0;
         
         private static readonly string[] menuOptions = { "Søg", "Vis alle brætspil", "Tilføj nyt brætspil", "Rediger brætspil",
     "Administrer produkt", "Opret forespørgsler", "Vis forespørgsler for et spil",
     "Vis alle forespørgsler", "Afslut program" };
-        
-        public static void MainMenu()
-        {
-            /*
-            boardGames = new List<BoardGame>
-            {
-                new BoardGame("Catan", "Standard", "Strategy", 3, 4, "English"),
-                new BoardGame("Ticket to Ride", "Deluxe", "Family", 2, 5, "English")
-            };
 
-            boardGames[0].AddNewProduct(new Product("God", 75));
-            boardGames[0].AddNewProduct(new Product("Okay", 40));
-            boardGames[1].AddNewProduct(new Product("God", 75));
-            boardGames[1].AddNewProduct(new Product("God", 75));
-            */
+        public static void MainMenu(Storage storage)
+        {
             Console.CursorVisible = false;
             bool running = true;
             int previousIndex = -1;
@@ -60,62 +40,62 @@ namespace Genspil
                         selectedIndex = (selectedIndex + 1) % menuOptions.Length;
                         break;
                     case ConsoleKey.Enter:
-                        running = HandleMenuSelection(selectedIndex);
+                        running = HandleMenuSelection(selectedIndex, storage);
                         selectedIndex = 0;
                         previousIndex = -1;
                         break;
                     case ConsoleKey.D1:
                     case ConsoleKey.NumPad1:
-                        running = HandleMenuSelection(0);
+                        running = HandleMenuSelection(0, storage);
                         selectedIndex = 0;
                         previousIndex = -1;
                         break;
                     case ConsoleKey.D2:
                     case ConsoleKey.NumPad2:
-                        running = HandleMenuSelection(1);
+                        running = HandleMenuSelection(1, storage);
                         selectedIndex = 0;
                         previousIndex = -1;
                         break;
                     case ConsoleKey.D3:
                     case ConsoleKey.NumPad3:
-                        running = HandleMenuSelection(2);
+                        running = HandleMenuSelection(2, storage);
                         selectedIndex = 0;
                         previousIndex = -1;
                         break;
                     case ConsoleKey.D4:
                     case ConsoleKey.NumPad4:
-                        running = HandleMenuSelection(3);
+                        running = HandleMenuSelection(3, storage);
                         selectedIndex = 0;
                         previousIndex = -1;
                         break;
                     case ConsoleKey.D5:
                     case ConsoleKey.NumPad5:
-                        running = HandleMenuSelection(4);
+                        running = HandleMenuSelection(4, storage);
                         selectedIndex = 0;
                         previousIndex = -1;
                         break;
                     case ConsoleKey.D6:
                     case ConsoleKey.NumPad6:
-                        running = HandleMenuSelection(5);
+                        running = HandleMenuSelection(5, storage);
                         selectedIndex = 0;
                         previousIndex = -1;
                         break;
                     case ConsoleKey.D7:
                     case ConsoleKey.NumPad7:
-                        running = HandleMenuSelection(6);
+                        running = HandleMenuSelection(6, storage);
                         selectedIndex = 0;
                         previousIndex = -1;
                         break;
                     case ConsoleKey.D8:
                     case ConsoleKey.NumPad8:
-                        running = HandleMenuSelection(7);
+                        running = HandleMenuSelection(7, storage);
                         selectedIndex = 0;
                         previousIndex = -1;
                         break;
                     case ConsoleKey.D0:
                     case ConsoleKey.NumPad0:
                     case ConsoleKey.Escape:
-                        running = HandleMenuSelection(8);
+                        running = HandleMenuSelection(8, storage);
                         break;
                 }
             }
@@ -223,7 +203,7 @@ namespace Genspil
 
 
 
-        private static bool HandleMenuSelection(int index)
+        private static bool HandleMenuSelection(int index, Storage storage)
         {
             Console.CursorVisible = true;
             Console.Clear();
@@ -231,28 +211,28 @@ namespace Genspil
             switch (index)
             {
                 case 0:
-                    Search();
+                    Search(storage);
                     break;
                 case 1:
-                    ShowBoardGameList();
+                    ShowBoardGameList(storage);
                     break;
                 case 2:
-                    AddBoardGame();
+                    AddBoardGame(storage);
                     break;
                 case 3:
-                    EditBoardGame();
+                    EditBoardGame(storage);
                     break;
                 case 4:
-                    EditProduct();
+                    EditProduct(storage);
                     break;
                 case 5:
-                    AddRequest();
+                    AddRequest(storage);
                     break;
                 case 6:
-                    ShowRequestsPerGame();
+                    ShowRequestsPerGame(storage);
                     break;
                 case 7:
-                    ShowAllRequests();
+                    ShowAllRequests(storage);
                     break;
                 case 8:
                     Console.WriteLine("\nAfslutter programmet...");
@@ -262,26 +242,26 @@ namespace Genspil
             Console.CursorVisible = false;
             Console.Clear();
             // Fortsætter menuen efter metode
-            return true; 
+            return true;
         }
         private static void DrawMenu()
         {
 
 
             Console.SetCursorPosition(0, 0);
-            Console.ForegroundColor = ConsoleColor.Cyan;            
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("=== Genspil ===".PadLeft(25));
             Console.ResetColor();
 
-            
+
             Console.WriteLine("\n[Brug Pil-Taster og Enter til at vælge]\n");
-            
+
             for (int i = 0; i < menuOptions.Length; i++)
             {
 
-                
+
                 Console.ForegroundColor = ConsoleColor.White;
-                Console.Write("["); 
+                Console.Write("[");
 
                 if (i == menuOptions.Length - 1)
                 {
@@ -296,7 +276,7 @@ namespace Genspil
                     Console.ForegroundColor = ConsoleColor.White;
                 }
 
-                Console.Write("] "); 
+                Console.Write("] ");
 
                 if (i == selectedIndex)
                 {
@@ -314,7 +294,7 @@ namespace Genspil
             }
         }
 
-        private static void Search()
+        private static void Search(Storage storage)
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Cyan;
@@ -330,8 +310,9 @@ namespace Genspil
                 Console.Clear();
                 return;
             }
+            List<BoardGame> games = storage.GetBoardGames();
 
-            var matches = boardGames
+            var matches = games
                 .Where(game =>
                     game.Name.ToLower().Contains(query) ||
                     game.Genre.ToLower().Contains(query) ||
@@ -357,17 +338,62 @@ namespace Genspil
             Console.ReadKey();
             Console.Clear();
         }
-        private static void ShowBoardGameList()
+        private static void ShowBoardGameList(Storage storage)
         {
+            int choice = GetMenuChoice("Vis alle brætspil", new List<string> {
+               "Tilbage til menu",
+               "Vis brætspil med produkter"
+               });
 
-            Console.WriteLine("Vis alle Brætspil");
+            if (choice == 0)
+                return;
 
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("[Liste over alle brætspil med produkter]\n");
+            Console.ResetColor();
+
+            List<BoardGame> games = storage.GetBoardGames();
+
+            if (games.Count == 0)
+            {
+                Console.WriteLine("Ingen brætspil tilgængelige.");
+            }
+            else
+            {
+                int count = 1;
+                foreach (BoardGame boardGame in games)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"[{count}] ");
+                    Console.ResetColor();
+                    Console.WriteLine($"{boardGame.Name} ({boardGame.Edition}) - {boardGame.Genre}, {boardGame.MinPlayerCount}-{boardGame.MaxPlayerCount} spillere, Sprog: {boardGame.Language}");
+
+                    if (boardGame.Products.Count == 0)
+                    {
+                        Console.WriteLine("   └─ Ingen produkter tilknyttet.");
+                    }
+                    else
+                    {
+                        foreach (Product product in boardGame.Products)
+                        {
+                            Console.WriteLine($"   └─ {product}"); // Kalder ToString()
+                        }
+                    }
+
+                    Console.WriteLine(); // Ekstra linje for spacing
+                    count++;
+                }
+            }
+
+            Console.WriteLine("\nTryk på en tast for at vende tilbage til menuen...");
             Console.ReadKey();
             Console.Clear();
-            MainMenu();
         }
 
-        private static void AddBoardGame()
+
+
+        private static void AddBoardGame(Storage storage)
         {
             int choice = GetMenuChoice("Opret nyt brætspil", new List<string> {
             "Tilbage til menu",
@@ -397,15 +423,34 @@ namespace Genspil
             string language = Console.ReadLine();
 
             BoardGame newGame = new BoardGame(name, edition, genre, minPlayers, maxPlayers, language);
-            boardGames.Add(newGame);
+            storage.AddBoardGame(newGame);
 
             Console.WriteLine($"\n'{newGame.Name}' er oprettet og tilføjet til listen.");
+            
             Console.ReadLine();
+            Console.Clear();
+        
+            // Brug GetMenuChoice til at spørge om produkt-tilføjelse
+            int addProductChoice = GetMenuChoice("Vil du tilføje et produkt til spillet?", new List<string> {
+            "Nej",
+            "Tilføj produkt"
+             });
+
+            if (addProductChoice == 1)
+            {
+                UserInputAddNewProduct(newGame);
+            }
+
+            Console.WriteLine("\nTryk på en tast for at vende tilbage til menuen...");
+
+            // Gem ændringer
+            dataHandler.SaveBoardGamesToFile(storage.GetBoardGames());
+            Console.ReadKey();
             Console.Clear();
         }
 
 
-        public static void EditBoardGame()
+        public static void EditBoardGame(Storage storage)
         {
             int choice = GetMenuChoice("Rediger brætspil", new List<string> {
              "Tilbage til menu",
@@ -416,7 +461,7 @@ namespace Genspil
                 return;
 
             Console.Clear();
-            BoardGame selectedGame = SelectBoardGame("opdatere");
+            BoardGame selectedGame = SelectBoardGame(storage, "opdatere");
             Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
 
             Console.Write("Nyt navn: ");
@@ -434,11 +479,14 @@ namespace Genspil
 
             Console.WriteLine("\nOpdateret BoardGame:");
             Console.WriteLine(selectedGame);
+            //Gem ændringer
+            dataHandler.SaveBoardGamesToFile(storage.GetBoardGames());
             Console.ReadLine();
             Console.Clear();
-            MainMenu();
+            //Denne skal nok fjernes
+            MainMenu(storage);
         }
-        private static void ShowAllRequests()
+        private static void ShowAllRequests(Storage storage)
         {
             int choice = GetMenuChoice("Vis alle forespørgsler", new List<string> {
              "Tilbage til menu",
@@ -454,7 +502,7 @@ namespace Genspil
             Console.WriteLine("Alle forespørgsler på tværs af spil:\n");
 
             int total = 0;
-            foreach (var game in BoardGames)
+            foreach (var game in storage.GetBoardGames())
             {
                 foreach (var req in game.Requests)
                 {
@@ -470,7 +518,7 @@ namespace Genspil
 
             Console.ReadKey();
         }
-        private static void EditProduct()
+        private static void EditProduct(Storage storage)
         {
             int choice = GetMenuChoice("Rediger produkt", new List<string> {
              "Tilbage til menu",
@@ -485,7 +533,7 @@ namespace Genspil
             Console.WriteLine("Rediger et produkt:\n");
 
             // Vælg boardgame
-            BoardGame selectedGame = SelectBoardGame("redigere et produkt fra");
+            BoardGame selectedGame = SelectBoardGame(storage, "redigere et produkt fra");
             Console.WriteLine($"\nDu har valgt: {selectedGame.Name}");
 
             // Vis produkter
@@ -528,13 +576,14 @@ namespace Genspil
 
             // Rediger produkt
             productToEdit.EditProduct(newPrice, newStatus);
-
+            //Gem ændringer
+            dataHandler.SaveBoardGamesToFile(storage.GetBoardGames());
             Console.WriteLine("\nProdukt opdateret.");
-            Console.ReadLine();            
+            Console.ReadLine();
         }
 
 
-        private static void AddRequest()
+        private static void AddRequest(Storage storage)
         {
             int choice = GetMenuChoice("Opret ny forespørgsel", new List<string> {
              "Tilbage til menu",
@@ -549,7 +598,7 @@ namespace Genspil
                     return;
 
                 case 2:
-                    AddBoardGame();
+                    AddBoardGame(storage);
                     break;
 
                     // case 1 fortsætter bare
@@ -557,7 +606,7 @@ namespace Genspil
 
             Console.Clear();
             // Nu vælger vi spillet (nyt eller eksisterende) med din eksisterende metode
-            BoardGame selectedGame = SelectBoardGame("oprette en forespørgsel på");
+            BoardGame selectedGame = SelectBoardGame(storage, "oprette en forespørgsel på");
             Console.Clear();
             Console.WriteLine($"Du har valgt: {selectedGame.Name}");
 
@@ -576,14 +625,13 @@ namespace Genspil
                 Console.WriteLine("Ugyldigt nummer, prøv igen.");
             }
 
-            Customer customer = new Customer(customerName, email, phone);
-            //lav valg af medarbejder
-            // Dummy medarbejder
+            Customer customer = new Customer(customerName, email, phone);            
+            
             Employee Employee = new Employee("Jamal", "Amal@Genspil.dk", 30552688);
 
             // Opret forespørgsel
-            int requestID = selectedGame.Requests.Count + 1;
-            Request newRequest = new Request(requestID, DateTime.Now)
+
+            Request newRequest = new Request(DateTime.Now)
             {
                 Customer = customer,
                 Employee = Employee,
@@ -591,7 +639,8 @@ namespace Genspil
             };
 
             selectedGame.AddNewRequest(newRequest);
-
+            //Gem ændringer
+            dataHandler.SaveBoardGamesToFile(storage.GetBoardGames());
             Console.WriteLine($"\nForespørgsel oprettet til '{selectedGame.Name}':");
             Console.WriteLine(newRequest);
             Console.ReadLine();
@@ -601,7 +650,7 @@ namespace Genspil
 
 
         // skal den hedde showrequestspergame eller showrequests?
-        private static void ShowRequestsPerGame()
+        private static void ShowRequestsPerGame(Storage storage)
         {
             int choice = GetMenuChoice("Vis forespørgsler for et spil", new List<string> {
             "Tilbage til menu",
@@ -612,17 +661,19 @@ namespace Genspil
                 return;
 
             Console.Clear();
-            BoardGame selectedGame = SelectBoardGame("se forespørgsler for");
+            BoardGame selectedGame = SelectBoardGame(storage, "se forespørgsler for");
             Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
             selectedGame.ShowGameRequests();
             Console.ReadKey();
-        }        
-        
-       
+        }
+
+
         //anettes
         //Metode til valg af boardgame
-        internal static BoardGame SelectBoardGame(string action)
+        internal static BoardGame SelectBoardGame(Storage storage, string action)
         {
+            List<BoardGame> boardGames = storage.GetBoardGames(); // Vi skal lige tilføje en getter i Storage
+
             Console.WriteLine($"Vælg et boardgame, som du vil {action}:");
             for (int i = 0; i < boardGames.Count; i++)
             {
@@ -631,6 +682,7 @@ namespace Genspil
             int selectedIndex = GetValidInt("Indtast nummeret for det ønskede boardgame: ", 1, boardGames.Count);
             return boardGames[selectedIndex - 1];
         }
+
 
         // Henter og validerer brugerens valg af boardgame
         public static int GetValidInt(string prompt, int min = int.MinValue, int max = int.MaxValue)
@@ -648,13 +700,14 @@ namespace Genspil
             return value;
         }
 
-        public static void AddProduct()
+        public static void AddProduct(Storage storage)
         {
-            BoardGame selectedGame = SelectBoardGame("tilføje et nyt produkt til");
+            BoardGame selectedGame = SelectBoardGame(storage, "tilføje et nyt produkt til");
             Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
 
             UserInputAddNewProduct(selectedGame);
-
+            //Gem ændringer
+            dataHandler.SaveBoardGamesToFile(storage.GetBoardGames());
             Console.WriteLine("\nOpdateret BoardGame:");
             Console.WriteLine(selectedGame);
             Console.ReadLine();
@@ -682,9 +735,9 @@ namespace Genspil
         }
 
 
-        public static void AvailableProductsForSelectedGame()
+        public static void AvailableProductsForSelectedGame(Storage storage)
         {
-            BoardGame selectedGame = SelectBoardGame("se tilgængelige produkter for");
+            BoardGame selectedGame = SelectBoardGame(storage, "se tilgængelige produkter for");
 
             if (selectedGame.CheckAvailability())
             {
@@ -702,26 +755,31 @@ namespace Genspil
             }
 
         }
+        /*
+        private static void InitializeStorage()
+        {
+            var boardGames = new List<BoardGame>
+          {
+            new BoardGame("Catan", "Standard", "Strategy", 3, 4, "English"),
+            new BoardGame("Ticket to Ride", "Deluxe", "Family", 2, 5, "English")
+          };
 
-        
+            boardGames[0].AddNewProduct(new Product("på lager", 75, "God"));
+            boardGames[0].AddNewProduct(new Product("på lager", 40, "Okay"));
+            boardGames[1].AddNewProduct(new Product("på lager", 75, "God"));
+            boardGames[1].AddNewProduct(new Product("på lager", 75, "God"));
+
+            storage = new Storage(boardGames);
+        }
+        */
 
 
         private static void ReturnToMenu()
         {
-            
+
             Console.Clear();
         }
-        /*
-             public class Employee
-             {
-                  public string Name { get; set; }
-                  public Employee(string name, string email, int phone) => Name = name;
-
-                  public Employee()
-                  {
-                  }
-             }
-        */
+        
     }
 
 }

@@ -50,7 +50,9 @@ namespace Genspil
 
             if (!File.Exists(FilePath))
             {
-                Console.WriteLine("Ingen boardgames.txt fundet. Starter med en tom liste.");
+                Console.WriteLine("Ingen boardgames.txt fundet. Indlæser foruddefinerede brætspil.");
+                boardGames = GetInitialBoardGames(); 
+                SaveBoardGamesToFile(boardGames);    
                 return boardGames;
             }
 
@@ -126,5 +128,21 @@ namespace Genspil
 
             return boardGames;
         }
+        public List<BoardGame> GetInitialBoardGames()
+        {
+            var boardGames = new List<BoardGame>
+        {
+        new BoardGame("Catan", "Standard", "Strategy", 3, 4, "English"),
+        new BoardGame("Ticket to Ride", "Deluxe", "Family", 2, 5, "English")
+        };
+
+            boardGames[0].AddNewProduct(new Product("på lager", 75, "God"));
+            boardGames[0].AddNewProduct(new Product("på lager", 40, "Okay"));
+            boardGames[1].AddNewProduct(new Product("på lager", 75, "God"));
+            boardGames[1].AddNewProduct(new Product("på lager", 75, "God"));
+
+            return boardGames;
+        }
+
     }
 }

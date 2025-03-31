@@ -4,20 +4,25 @@ namespace Genspil
 {
     public class Request
     {
-        // Properties
-        public int RequestID { get; set; }
-        public DateTime Date { get; set; }
+        private static int _nextId = 1;
 
-        // Relations
+        public int RequestID { get; private set; }
+        public DateTime Date { get; set; }        
         public Customer Customer { get; set; }
         public Employee Employee { get; set; }
         internal BoardGame BoardGame { get; set; }
 
         // Constructor
+        public Request(DateTime date)
+        {
+            RequestID = _nextId++;
+            Date = date;
+        }
         public Request(int requestID, DateTime date)
         {
             RequestID = requestID;
             Date = date;
+            _nextId = Math.Max(_nextId, requestID + 1); // Sørger for at ID'er forbliver unikke
         }
 
         // Eksempelmetode (valgfri – til test/debug)

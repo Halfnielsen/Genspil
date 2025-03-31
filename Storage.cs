@@ -78,34 +78,11 @@ namespace Genspil
                     Console.WriteLine(boardGame.Name);
             }
         }
-
-
-        public void Search()
+        public List<BoardGame> GetBoardGames()
         {
-            string Searching = Console.ReadLine().ToLower();
-            bool found = false;
-            foreach (BoardGame boardGame in BoardGames)
-            {
-                if (boardGame.Name.ToLower().Contains(Searching))
-                {
-                    Console.WriteLine($"Der er et match! brætspillet med navnet {boardGame.Name} er fundet! ");
-                    found = true;
-                }
-                foreach (var product in boardGame.Products)
-                {
-                    if (product.getId().ToString().ToLower().Contains(Searching))
-                    {
-                        Console.WriteLine($"Der er et match! produktet er fundet med navnet {boardGame.Name}");
-                        Console.WriteLine($"Produktet ID {product.getId()}, Status {product.getStatus()}, Pris {product.getPrice()} kr., Stand {product.getStand()}");
-                    }
-                }
-
-            }
-            if (!found)
-            {
-                Console.WriteLine("Ingen resultater fra din søgning");
-            }
-
+            return BoardGames;
         }
+
+        
     }
 }
