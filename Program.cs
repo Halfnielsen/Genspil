@@ -11,10 +11,17 @@ namespace Genspil
 
         public static void Main(string[] args)
         {
+            DataHandler dataHandler = new DataHandler();
+            List<BoardGame> boardGames = dataHandler.LoadBoardGamesFromFile();
 
-            
-            Menu.MainMenu();
-
+            try
+            {
+                Menu.MainMenu();
+            }
+            finally
+            {
+                dataHandler.SaveBoardGamesToFile(boardGames);
+            }
         }
 
 
