@@ -100,6 +100,27 @@ namespace Genspil
         {
             return Products.Where(p => p.getStatus().ToLower() == "på lager").ToList();
         }
+
+        //Til at gemme til fil
+        public string ToFileString()
+        {
+            return $"BoardGame|{Name}|{Edition}|{Genre}|{MinPlayerCount}|{MaxPlayerCount}|{Language}";
+        }
+        //Til at indlæse fra fil
+        public static BoardGame FromString(string data)
+        {
+            string[] parts = data.Split('|');
+            if (parts.Length < 7) throw new FormatException("Ugyldigt BoardGame-format.");
+
+            string name = parts[1];
+            string edition = parts[2];
+            string genre = parts[3];
+            int minPlayerCount = int.Parse(parts[4]);
+            int maxPlayerCount = int.Parse(parts[5]);
+            string language = parts[6];
+
+            return new BoardGame(name, edition, genre, minPlayerCount, maxPlayerCount, language, new List<Product>(), new List<Request>());
+        }
     }
 }
 

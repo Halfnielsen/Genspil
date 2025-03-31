@@ -34,6 +34,21 @@ namespace Genspil
             this.soldProducts = new List<Product>();
         }
 
+        // Ny constructor til indlæsning fra fil (hvor id, stand, m.v. er givet)
+        public Product(int id, string status, double price, string stand)
+        {
+            this.id = id;
+            this.status = status;
+            this.price = price;
+            this.stand = stand;
+            this.soldProducts = new List<Product>();
+
+            // Sørger for at nextId er større end det indlæste id
+            if (id >= nextId)
+            {
+                nextId = id + 1;
+            }
+        }
         public int getId() { return id; }
        
 
@@ -77,6 +92,31 @@ namespace Genspil
         {
             return $"ID: {id}, Status: {status}, Pris: {price} kr";
 
+        }
+
+        //Til at gemme til fil
+        public string ToFileString()
+        {
+            return $"Product|{getId()}|{getStatus()}|{getPrice()}|{getStand()}";
+        }
+
+        //Til at indlæse fra fil
+        public static Product FromString(string data)
+        {
+            string[] parts = data.Split('|');
+            if (parts.Length < 5) throw new FormatException("Ugyldigt Product-format.");
+
+            if (int.TryParse(parts[1], out int id) &&
+                double.TryParse(parts[3], out double price))
+            {
+                string status = parts[2];
+                string stand = parts[4];
+                return new Product(id, status, price, stand);
+            }
+            else
+            {
+                throw new FormatException("Fejl ved parsing af produktdata: " + data);
+            }
         }
     }
 }
