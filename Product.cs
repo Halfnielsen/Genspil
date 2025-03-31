@@ -23,8 +23,8 @@ namespace Genspil
 
 
 
-        
-        public Product(string status, double price)
+
+        public Product(string status, double price, string stand)
 
         {
             this.id = nextId++;
@@ -33,7 +33,6 @@ namespace Genspil
             this.stand = stand;
             this.soldProducts = new List<Product>();
         }
-
         // Ny constructor til indlæsning fra fil (hvor id, stand, m.v. er givet)
         public Product(int id, string status, double price, string stand)
         {
@@ -50,7 +49,7 @@ namespace Genspil
             }
         }
         public int getId() { return id; }
-       
+
 
         public string getStatus() { return status; }
         public void setStatus(string status) { this.status = status; }
@@ -64,7 +63,7 @@ namespace Genspil
         public void Sell()
 
         {
-            if (status.ToLower() == "på lager")
+            if (status.ToLower() == "på lager" && stand.ToLower() == "god" || stand.ToLower() == "okay")
             {
                 status = "solgt";
                 Console.WriteLine($"Produktet med ID {id} er blevet solgt!");
@@ -73,7 +72,7 @@ namespace Genspil
             }
             else
             {
-                Console.WriteLine($"Produktet kan ikke sælges da nuværende status er {status}");
+                Console.WriteLine($"Produktet kan ikke sælges da nuværende status er {status} som er i {stand} stand");
             }
 
         }
@@ -90,11 +89,9 @@ namespace Genspil
         }
         public override string ToString()
         {
-            return $"ID: {id}, Status: {status}, Pris: {price} kr";
+            return $"ID: {id}, Status: {status}, Pris: {price} kr, Stand: {stand}";
 
         }
-
-        //Til at gemme til fil
         public string ToFileString()
         {
             return $"Product|{getId()}|{getStatus()}|{getPrice()}|{getStand()}";
@@ -120,4 +117,3 @@ namespace Genspil
         }
     }
 }
-
