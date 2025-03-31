@@ -13,6 +13,7 @@ namespace Genspil
             DataHandler dataHandler = new DataHandler();
             List<BoardGame> boardGames = dataHandler.LoadBoardGamesFromFile();
 
+
             Storage storage = new Storage(boardGames); 
 
             try
@@ -22,6 +23,7 @@ namespace Genspil
             finally
             {
                 dataHandler.SaveBoardGamesToFile(storage.GetBoardGames()); 
+
             }
         }
 
