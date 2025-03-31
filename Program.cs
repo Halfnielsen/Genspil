@@ -6,15 +6,23 @@ namespace Genspil
 {
     internal class Program
     {
-       // Deklarér boardGames som et statisk felt
-        //private static List<BoardGame> boardGames;
+       
 
         public static void Main(string[] args)
         {
+            DataHandler dataHandler = new DataHandler();
+            List<BoardGame> boardGames = dataHandler.LoadBoardGamesFromFile();
 
-            
-            Menu.MainMenu();
+            Storage storage = new Storage(boardGames); 
 
+            try
+            {
+                Menu.MainMenu(storage); 
+            }
+            finally
+            {
+                dataHandler.SaveBoardGamesToFile(storage.GetBoardGames()); 
+            }
         }
 
 
