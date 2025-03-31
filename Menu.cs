@@ -14,7 +14,7 @@ namespace Genspil
         
         private static readonly string[] menuOptions = { "Søg", "Vis alle brætspil", "Tilføj nyt brætspil", "Rediger brætspil",
     "Administrer produkt", "Opret forespørgsler", "Vis forespørgsler for et spil",
-    "Vis alle forespørgsler", "Afslut program" };
+    "Vis alle forespørgsler","Sælg et produkt", "Afslut program" };
 
         public static void MainMenu(Storage storage)
         {
@@ -92,10 +92,16 @@ namespace Genspil
                         selectedIndex = 0;
                         previousIndex = -1;
                         break;
+                    case ConsoleKey.D9:
+                    case ConsoleKey.NumPad9:
+                        running = HandleMenuSelection(8, storage);
+                        selectedIndex = 0;
+                        previousIndex = -1;
+                        break;
                     case ConsoleKey.D0:
                     case ConsoleKey.NumPad0:
                     case ConsoleKey.Escape:
-                        running = HandleMenuSelection(8, storage);
+                        running = HandleMenuSelection(9, storage);
                         break;
                 }
             }
@@ -235,6 +241,9 @@ namespace Genspil
                     ShowAllRequests(storage);
                     break;
                 case 8:
+                    SellProduct(storage);
+                    break;
+                case 9:
                     Console.WriteLine("\nAfslutter programmet...");
                     Thread.Sleep(1000);
                     return false;
@@ -726,7 +735,7 @@ namespace Genspil
                     break;
                 Console.WriteLine("Ugyldigt input. Indtast en gyldig pris.");
             }
-            Console.Write("Indtast stand status (god / ok / dårlig): ");
+            Console.Write("Indtast stand status (god / okay / dårlig): ");
             string stand = Console.ReadLine() ?? "";
 
             Product newProduct = new Product(status, price, stand); // ID genereres automatisk
@@ -755,23 +764,47 @@ namespace Genspil
             }
 
         }
-        /*
-        private static void InitializeStorage()
+        private static void SellProduct(Storage storage)
         {
-            var boardGames = new List<BoardGame>
-          {
-            new BoardGame("Catan", "Standard", "Strategy", 3, 4, "English"),
-            new BoardGame("Ticket to Ride", "Deluxe", "Family", 2, 5, "English")
-          };
+            int choice = GetMenuChoice("Sælg et produkt", new List<string> {
+        "Tilbage til menu",
+        "Vælg spil og sælg produkt"
+         });
 
-            boardGames[0].AddNewProduct(new Product("på lager", 75, "God"));
-            boardGames[0].AddNewProduct(new Product("på lager", 40, "Okay"));
-            boardGames[1].AddNewProduct(new Product("på lager", 75, "God"));
-            boardGames[1].AddNewProduct(new Product("på lager", 75, "God"));
+            if (choice == 0)
+                return;
 
-            storage = new Storage(boardGames);
+            Console.Clear();
+            BoardGame selectedGame = SelectBoardGame(storage, "sælge et produkt fra");
+
+            if (selectedGame.Products.Count == 0)
+            {
+                Console.WriteLine("Der er ingen produkter tilknyttet dette spil.");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.WriteLine("\nProdukter på lager:");
+            foreach (var product in selectedGame.Products)
+            {
+                Console.WriteLine(product);
+            }
+
+            int productId = GetValidInt("\nIndtast ID på produktet du vil sælge: ");
+            Product productToSell = selectedGame.Products.FirstOrDefault(p => p.getId() == productId);
+
+            if (productToSell == null)
+            {
+                Console.WriteLine("Produkt med det ID blev ikke fundet.");
+            }
+            else
+            {
+                productToSell.Sell(); // 👉 her bruger vi metoden!
+            }
+
+            Console.WriteLine("\nTryk på en tast for at vende tilbage til menuen...");
+            Console.ReadKey();
         }
-        */
 
 
         private static void ReturnToMenu()
