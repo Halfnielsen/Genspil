@@ -25,13 +25,12 @@ namespace Genspil
             _nextId = Math.Max(_nextId, requestID + 1); // Sørger for at ID'er forbliver unikke
         }
 
-        // Eksempelmetode (valgfri – til test/debug)
         public override string ToString()
         {
             return $"\nForespørgsel ID: {RequestID}, Dato: {Date.ToShortDateString()} \n" +
                    $"Kunde: {Customer?.Name} Tlf: {Customer?.Phone} Mail: {Customer?.Email} \n" +
-                   $"Medarbejder: {Employee?.Name} ({Employee?.Email}, {Employee?.Phone}), " +
-                   $"Spil: {BoardGame?.Name}";
+                   $"Medarbejder: {Employee?.Name} ({Employee?.Email}, {Employee?.Phone}), \n" +
+                   $"Spil: {BoardGame?.Name}, Udgave: {BoardGame?.Edition}, Sprog: {BoardGame?.Language}";
         }
 
 
@@ -86,7 +85,6 @@ namespace Genspil
                 int bgMaxPlayerCount = int.Parse(parts[13]);
                 string bgLanguage = parts[14];
 
-                // Forudsætter en BoardGame-konstruktor, der modtager alle disse oplysninger
                 request.BoardGame = new BoardGame(bgName, bgEdition, bgGenre, bgMinPlayerCount, bgMaxPlayerCount, bgLanguage, new List<Product>(), new List<Request>());
             }
 
