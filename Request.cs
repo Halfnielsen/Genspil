@@ -28,16 +28,19 @@ namespace Genspil
         // Eksempelmetode (valgfri – til test/debug)
         public override string ToString()
         {
-            return $"Forespørgsel ID: {RequestID}, Dato: {Date.ToShortDateString()}, " +
-                   $"Kunde: {Customer?.Name}, Medarbejder: {Employee?.Name}, Spil: {BoardGame?.Name}";
+            return $"\nForespørgsel ID: {RequestID}, Dato: {Date.ToShortDateString()} \n" +
+                   $"Kunde: {Customer?.Name} Tlf: {Customer?.Phone} Mail: {Customer?.Email} \n" +
+                   $"Medarbejder: {Employee?.Name} ({Employee?.Email}, {Employee?.Phone}), " +
+                   $"Spil: {BoardGame?.Name}";
         }
+
 
         //Til at gemme til fil
         public string ToFileString()
         {
             return $"Request|{RequestID}|{Date:yyyy-MM-dd}|" +
                    $"{(Customer != null ? Customer.Name : "N/A")}|{(Customer != null ? Customer.Email : "N/A")}|{(Customer != null ? Customer.Phone.ToString() : "N/A")}|" +
-                   $"{(Employee != null ? Employee.Name : "N/A")}|{(Employee != null ? Employee.getEmail() : "N/A")}|{(Employee != null ? Employee.getPhone().ToString() : "N/A")}|" +
+                   $"{(Employee != null ? Employee.Name : "N/A")}|{(Employee != null ? Employee.Email : "N/A")}|{(Employee != null ? Employee.Phone.ToString() : "N/A")}|" +
                    $"{(BoardGame != null ? BoardGame.Name : "N/A")}|{(BoardGame != null ? BoardGame.Edition : "N/A")}|" +
                    $"{(BoardGame != null ? BoardGame.Genre : "N/A")}|{(BoardGame != null ? BoardGame.MinPlayerCount.ToString() : "N/A")}|" +
                    $"{(BoardGame != null ? BoardGame.MaxPlayerCount.ToString() : "N/A")}|{(BoardGame != null ? BoardGame.Language : "N/A")}";

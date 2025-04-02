@@ -63,7 +63,7 @@ namespace Genspil
         public void Sell()
 
         {
-            if (status.ToLower() == "på lager" && stand.ToLower() == "god" || stand.ToLower() == "okay")
+            if (status.ToLower() == "på lager" && stand.ToLower() == "god" || stand.ToLower() == "okay" || stand.ToLower() == "slidt")
             {
                 status = "solgt";
                 Console.WriteLine($"Produktet med ID {id} er blevet solgt!");
@@ -78,15 +78,22 @@ namespace Genspil
         }
 
 
-        public void EditProduct(double price, string status)
+        public void EditProduct(double price, string status, string stand)
         {
             this.price = price;
+
             if (status.ToLower() == "på lager" || status.ToLower() == "reperation" || status.ToLower() == "utilgængelig")
             {
                 this.status = status.ToLower();
-                Console.WriteLine($"Produktet med ID{id} er opdateret til pris: {price} og status: {status}");
             }
+            if (stand.ToLower() == "god" || stand.ToLower() == "okay" || stand.ToLower() == "slidt")
+            {
+                this.stand = stand.ToLower();
+            }
+
+            Console.WriteLine($"\n\nProduktet med ID {id} er opdateret: Pris: {price} kr Status: {this.status} Stand: {this.stand}\n");
         }
+
         public override string ToString()
         {
             return $"ID: {id}, Status: {status}, Pris: {price} kr, Stand: {stand}";
