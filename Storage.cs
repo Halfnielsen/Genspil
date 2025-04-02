@@ -26,6 +26,7 @@ namespace Genspil
             BoardGames.Add(boardGame);
             Console.WriteLine($"Brætspillet: {boardGame.Name} er tilføjet. ");
         }
+        /*
         public void ShowBoardGameList()
         {
             if (BoardGames.Count == 0)
@@ -38,6 +39,7 @@ namespace Genspil
                 Console.WriteLine(boardGame.Name);
             }
         }
+        
         public void ShowProductList()
         {
             if (BoardGames.Count == 0)
@@ -69,6 +71,7 @@ namespace Genspil
                 }
             }
         }
+        //Skal nok fjernes
         public void ShowAvalaibleBoardGames()
         {
             Console.WriteLine("Tilgængelige brætspil:");
@@ -78,6 +81,7 @@ namespace Genspil
                     Console.WriteLine(boardGame.Name);
             }
         }
+        */
         public List<BoardGame> GetBoardGames()
         {
             return BoardGames;
