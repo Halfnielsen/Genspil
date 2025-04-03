@@ -91,6 +91,19 @@ namespace Genspil
             }
         }
 
+        public bool RemoveRequest(int requestIndex)
+        {
+            if (requestIndex < 0 || requestIndex >= Requests.Count)
+            {
+                // Returner false, hvis det angivne indeks er ugyldigt.
+                return false;
+            }
+
+            // Fjern requesten på den angivne position.
+            Requests.RemoveAt(requestIndex);
+            return true;
+        }
+
         public bool CheckAvailability()
         {
             return Products.Any(p => p.getStatus().ToLower() == "på lager");

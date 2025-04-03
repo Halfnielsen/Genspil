@@ -18,13 +18,17 @@ namespace Genspil
 
         public void AddBoardGame(BoardGame boardGame)
         {
-            if (BoardGames.Exists(b => b.Name.ToLower() == boardGame.Name.ToLower()))
+            if (BoardGames.Exists(b =>
+                b.Name.Equals(boardGame.Name, StringComparison.OrdinalIgnoreCase) &&
+                b.Edition.Equals(boardGame.Edition, StringComparison.OrdinalIgnoreCase) &&
+                b.Language.Equals(boardGame.Language, StringComparison.OrdinalIgnoreCase)))
             {
-                Console.WriteLine($"Brætspillet {boardGame.Name} eksisterer allerede.");
+                Console.WriteLine($"Brætspillet {boardGame.Name} ({boardGame.Edition}, {boardGame.Language}) eksisterer allerede.");
                 return;
             }
+
             BoardGames.Add(boardGame);
-            Console.WriteLine($"Brætspillet: {boardGame.Name} er tilføjet. ");
+            Console.WriteLine($"Brætspillet: {boardGame.Name} ({boardGame.Edition}, {boardGame.Language}) er tilføjet.");
         }
         /*
         public void ShowBoardGameList()
@@ -87,6 +91,15 @@ namespace Genspil
             return BoardGames;
         }
 
-        
+        public List<BoardGame> GetBoardGamesSortedByName()
+        {
+            return BoardGames.OrderBy(b => b.Name, StringComparer.OrdinalIgnoreCase).ToList();
+        }
+
+        public List<BoardGame> GetBoardGamesSortedByGenre()
+        {
+            return BoardGames.OrderBy(b => b.Genre, StringComparer.OrdinalIgnoreCase).ToList();
+        }
+
     }
 }

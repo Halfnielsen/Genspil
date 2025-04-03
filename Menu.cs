@@ -13,8 +13,7 @@ namespace Genspil
         private static int selectedIndex = 0;
 
         private static readonly string[] menuOptions = { "Søg", "Vis alle brætspil", "Administrer brætspil", 
-         "Administrer produkt", "Opret forespørgsler", "Vis forespørgsler for et spil",
-         "Vis alle forespørgsler", "Afslut program" };
+         "Administrer produkt", "Administrer forespørgsler", "Afslut program" };
 
         public static void MainMenu(Storage storage)
         {
@@ -80,7 +79,7 @@ namespace Genspil
                         selectedIndex = 0;
                         previousIndex = -1;
                         break;
-                    case ConsoleKey.D6:
+                    /*case ConsoleKey.D6:
                     case ConsoleKey.NumPad6:
                         running = HandleMenuSelection(5, storage);
                         selectedIndex = 0;
@@ -91,11 +90,11 @@ namespace Genspil
                         running = HandleMenuSelection(6, storage);
                         selectedIndex = 0;
                         previousIndex = -1;
-                        break;                    
+                        break;*/                    
                     case ConsoleKey.D0:
                     case ConsoleKey.NumPad0:
                     case ConsoleKey.Escape:
-                        running = HandleMenuSelection(7, storage);
+                        running = HandleMenuSelection(5, storage);
                         break;
                 }
             }
@@ -222,18 +221,12 @@ namespace Genspil
                     ManageBoardGames(storage); 
                     break;
                 case 3:
-                    EditProduct(storage);
+                    ManageProducts(storage);
                     break;
                 case 4:
-                    AddRequest(storage);
-                    break;
+                    ManageRequests(storage);
+                    break;              
                 case 5:
-                    ShowRequestsPerGame(storage);
-                    break;
-                case 6:
-                    ShowAllRequests(storage);
-                    break;                
-                case 7:
                     Console.WriteLine("\nAfslutter programmet...");
                     Thread.Sleep(1000);
                     return false;
@@ -340,20 +333,51 @@ namespace Genspil
         }
         private static void ShowBoardGameList(Storage storage)
         {
-            int choice = GetMenuChoice("Vis alle brætspil", new List<string> {
-               "Tilbage til menu",
-               "Vis brætspil med produkter"
-               });
+            int sortChoice = GetMenuChoice("Vis alle brætspil - Vælg sortering", new List<string>
+            {
+            "Tilbage til menu",
+            "Ingen sortering",
+            "Sortér efter navn",
+            "Sortér efter genre"
+            });
 
-            if (choice == 0)
+            if (sortChoice == 0)
                 return;
 
+            // Bestem den sorterede liste og sorteringskriteriet baseret på brugerens valg
+            List<BoardGame> games;
+            string sortCriteria;
+
+            switch (sortChoice)
+            {
+                case 1:
+                    games = storage.GetBoardGames();
+                    sortCriteria = "Ingen sortering";
+                    break;
+                case 2:
+                    games = storage.GetBoardGamesSortedByName();
+                    sortCriteria = "Navn";
+                    break;
+                case 3:
+                    games = storage.GetBoardGamesSortedByGenre();
+                    sortCriteria = "Genre";
+                    break;
+                default:
+                    games = storage.GetBoardGames();
+                    sortCriteria = "Ingen sortering";
+                    break;
+            }
+
+            PrintBoardGames(games, sortCriteria);
+        }
+
+        private static void PrintBoardGames(List<BoardGame> games, string sortCriteria)
+        {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("[Liste over alle brætspil med produkter]\n");
+            Console.WriteLine($"[Liste over alle brætspil med produkter - Sorteret: {sortCriteria}]\n");
             Console.ResetColor();
 
-            List<BoardGame> games = storage.GetBoardGames();
 
             if (games.Count == 0)
             {
@@ -370,9 +394,8 @@ namespace Genspil
                     Console.ResetColor();
                     Console.WriteLine($"{boardGame.Name} ({boardGame.Edition}) - {boardGame.Genre}, {boardGame.MinPlayerCount}-{boardGame.MaxPlayerCount} spillere, Sprog: {boardGame.Language}");
 
-                    //Kun "på lager"
+                    // Udskriv kun "på lager" produkter
                     List<Product> availableProducts = boardGame.GetAvailableProducts();
-
                     if (availableProducts.Count == 0)
                     {
                         Console.WriteLine("   └─ Ingen produkter på lager.");
@@ -495,6 +518,42 @@ namespace Genspil
             Console.Clear();
             
         }
+
+        private static void ManageRequests(Storage storage)
+        {
+            // Opret en undermenu for forespørgsler
+            int choice = GetMenuChoice("Administrer forespørgsler", new List<string> {
+                "Tilbage til menu",
+                "Opret forespørgsel",
+                "Vis forespørgsler for et spil",
+                "Vis alle forespørgsler",
+                "Slet forespørgsel"
+            });
+
+            if (choice == 0)
+                return;
+
+            switch (choice)
+            {
+                case 1:
+                    AddRequest(storage);
+                    break;
+                case 2:
+                    ShowRequestsPerGame(storage);
+                    break;
+                case 3:
+                    ShowAllRequests(storage);
+                    break;
+                case 4:
+                    DeleteRequest(storage);
+                    break;
+            }
+
+            Console.WriteLine("\nTryk på en tast for at vende tilbage til menuen...");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
         private static void ShowAllRequests(Storage storage)
         {
             int choice = GetMenuChoice("Vis alle forespørgsler", new List<string> {
@@ -527,7 +586,8 @@ namespace Genspil
 
             Console.ReadKey();
         }
-        private static void EditProduct(Storage storage)
+        
+        private static void ManageProducts(Storage storage)
         {
             int choice = GetMenuChoice("Rediger produkt", new List<string> {
              "Tilbage til menu",
@@ -538,15 +598,21 @@ namespace Genspil
             if (choice == 0)
                 return;
 
-            Console.Clear();
+            if (choice == 1)
+            {
+                EditProduct(storage);
+                return;
+            }
 
             if (choice == 2)
             {
                 SellProduct(storage);
                 return;
             }
-
-
+        }
+        
+        private static void EditProduct(Storage storage)
+        {
             Console.Clear();
             Console.WriteLine("Rediger et produkt:\n");
 
@@ -589,7 +655,7 @@ namespace Genspil
             }
 
             // Ny status
-            Console.Write("Indtast ny status (på lager / reperation / utilgængelig): ");
+            Console.Write("Indtast ny status (på lager / reperation): ");
             string newStatus = Console.ReadLine() ?? "";
 
             // Ny stand
@@ -685,8 +751,78 @@ namespace Genspil
             Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
             selectedGame.ShowGameRequests();
             Console.ReadKey();
-        }                
-       
+        }
+
+        private static void DeleteRequest(Storage storage)
+        {
+            // Saml alle requests fra hvert brætspil (brug den eksisterende Requests-list)
+            var allRequests = new List<(BoardGame Game, Request Request)>();
+            foreach (var game in storage.GetBoardGames())
+            {
+                foreach (var request in game.Requests)
+                {
+                    allRequests.Add((game, request));
+                }
+            }
+
+            if (allRequests.Count == 0)
+            {
+                Console.WriteLine("Ingen forespørgsler tilgængelige for sletning.");
+                Console.WriteLine("Tryk på en tast for at vende tilbage til menuen...");
+                Console.ReadKey();
+                return;
+            }
+
+            // Sorter listen baseret på RequestID
+            allRequests = allRequests.OrderBy(r => r.Request.RequestID).ToList();
+
+            // Vis alle requests med tilhørende brætspilnavn
+            Console.WriteLine("Alle forespørgsler:");
+            foreach (var entry in allRequests)
+            {
+                Console.WriteLine($"[{entry.Request.RequestID}] {entry.Request} (Brætspil: {entry.Game.Name})");
+            }
+
+            Console.Write("Indtast ID for den forespørgsel, du vil slette: ");
+            if (!int.TryParse(Console.ReadLine(), out int requestId))
+            {
+                Console.WriteLine("Ugyldigt valg.");
+                return;
+            }
+
+            // Find det entry med det matchende ID
+            var selectedEntry = allRequests.FirstOrDefault(r => r.Request.RequestID == requestId);
+            if (selectedEntry == default)
+            {
+                Console.WriteLine("Forespørgslen blev ikke fundet.");
+                return;
+            }
+
+            BoardGame selectedGame = selectedEntry.Game;
+            Request selectedRequest = selectedEntry.Request;
+
+            // Find index for den valgte request i det tilhørende brætspils request-liste
+            int requestIndex = selectedGame.Requests.IndexOf(selectedRequest);
+            if (requestIndex == -1)
+            {
+                Console.WriteLine("Fejl: Forespørgslen blev ikke fundet i brætspillet.");
+                return;
+            }
+
+            // Kald metoden i BoardGame-klassen for at fjerne requesten
+            bool result = selectedGame.RemoveRequest(requestIndex);
+            if (result)
+            {
+                Console.WriteLine("Forespørgslen blev slettet.");
+            }
+            else
+            {
+                Console.WriteLine("Fejl ved sletning af forespørgslen.");
+            }
+        }
+
+
+
         internal static BoardGame SelectBoardGame(Storage storage, string action)
         {
             List<BoardGame> boardGames = storage.GetBoardGames(); 
@@ -745,7 +881,7 @@ namespace Genspil
             }
 
             // Læs stand 
-            Console.Write("Indtast stand status (god / okay / dårlig): ");
+            Console.Write("Indtast stand status (god / okay / slidt): ");
             string stand = Console.ReadLine() ?? "";
 
             // Opret og tilføj produkt
