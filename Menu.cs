@@ -423,7 +423,8 @@ namespace Genspil
             int choice = GetMenuChoice("Administrer brætspil", new List<string> {
              "Tilbage til menu",
              "Tilføj nyt brætspil",
-             "Rediger eksisterende brætspil"
+             "Rediger eksisterende brætspil",
+             "Slet eksisterende brætspil"
              });
 
             if (choice == 0)
@@ -433,6 +434,10 @@ namespace Genspil
                 AddBoardGame(storage);
             else if (choice == 2)
                 EditBoardGame(storage);
+            else if (choice == 3)
+                DeleteBoardGame(storage);
+            else
+                Console.WriteLine("Ugyldigt valg. Prøv igen.");
         }
 
         private static void AddBoardGame(Storage storage)
@@ -519,78 +524,31 @@ namespace Genspil
             
         }
 
-        private static void ManageRequests(Storage storage)
+        public static void DeleteBoardGame(Storage storage)
         {
-            // Opret en undermenu for forespørgsler
-            int choice = GetMenuChoice("Administrer forespørgsler", new List<string> {
-                "Tilbage til menu",
-                "Opret forespørgsel",
-                "Vis forespørgsler for et spil",
-                "Vis alle forespørgsler",
-                "Slet forespørgsel"
-            });
+            // Brug SelectBoardGame til at lade brugeren vælge, hvilket brætspil der skal slettes.
+            BoardGame selectedGame = SelectBoardGame(storage, "slette");
 
-            if (choice == 0)
-                return;
+            // Kald remove-metoden i Storage-klassen for at slette brætspillet.
+            bool removed = storage.RemoveBoardGame(selectedGame);
 
-            switch (choice)
+            if (removed)
             {
-                case 1:
-                    AddRequest(storage);
-                    break;
-                case 2:
-                    ShowRequestsPerGame(storage);
-                    break;
-                case 3:
-                    ShowAllRequests(storage);
-                    break;
-                case 4:
-                    DeleteRequest(storage);
-                    break;
+                Console.WriteLine($"Brætspillet {selectedGame.Name} ({selectedGame.Edition}, {selectedGame.Language}) blev slettet.");
+            }
+            else
+            {
+                Console.WriteLine("Fejl ved sletning af brætspillet.");
             }
 
-            Console.WriteLine("\nTryk på en tast for at vende tilbage til menuen...");
-            Console.ReadKey();
-            Console.Clear();
-        }
-
-        private static void ShowAllRequests(Storage storage)
-        {
-            int choice = GetMenuChoice("Vis alle forespørgsler", new List<string> {
-             "Tilbage til menu",
-             "Vis alle forespørgsler"
-            });
-
-            if (choice == 0)
-                return;
-
-            Console.Clear();
-
-
-            Console.WriteLine("Alle forespørgsler på tværs af spil:\n");
-
-            int total = 0;
-            foreach (var game in storage.GetBoardGames())
-            {
-                foreach (var req in game.Requests)
-                {
-                    Console.WriteLine($"[Spil: {game.Name}] {req}");
-                    total++;
-                }
-            }
-
-            if (total == 0)
-            {
-                Console.WriteLine("Ingen forespørgsler fundet.");
-            }
-
+            Console.WriteLine("Tryk på en tast for at vende tilbage til menuen...");
             Console.ReadKey();
         }
-        
         private static void ManageProducts(Storage storage)
         {
-            int choice = GetMenuChoice("Rediger produkt", new List<string> {
+            int choice = GetMenuChoice("Administrer produkt", new List<string> {
              "Tilbage til menu",
+             "Tilføj nyt produkt",
              "Vælg et spil og rediger et produkt",
              "Sælg et produkt"
             });
@@ -599,6 +557,12 @@ namespace Genspil
                 return;
 
             if (choice == 1)
+            {
+                AddProduct(storage);
+                return;
+            }
+
+            if (choice == 2)
             {
                 EditProduct(storage);
                 return;
@@ -610,7 +574,46 @@ namespace Genspil
                 return;
             }
         }
-        
+
+        public static void AddProduct(Storage storage)
+        {
+            BoardGame selectedGame = SelectBoardGame(storage, "tilføje et nyt produkt til");
+            Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
+            UserInputAddNewProduct(selectedGame);
+
+            //Gem ændringer
+            dataHandler.SaveBoardGamesToFile(storage.GetBoardGames());
+            Console.WriteLine("\nOpdateret BoardGame:");
+            Console.WriteLine(selectedGame);
+            Console.ReadLine();
+        }
+
+        internal static void UserInputAddNewProduct(BoardGame game)
+        {
+            // Læs status
+            Console.Write("Indtast produkt status (på lager / reperation): ");
+            string status = Console.ReadLine() ?? "";
+
+            // Læs pris
+            double price;
+            while (true)
+            {
+                Console.Write("Indtast produkt pris (f.eks. 49.99): ");
+                if (double.TryParse(Console.ReadLine(), out price))
+                    break;
+                Console.WriteLine("Ugyldigt input. Indtast en gyldig pris.");
+            }
+
+            // Læs stand 
+            Console.Write("Indtast stand status (god / okay / slidt): ");
+            string stand = Console.ReadLine() ?? "";
+
+            // Opret og tilføj produkt
+            Product newProduct = new Product(status, price, stand);
+            game.AddNewProduct(newProduct);
+            Console.WriteLine("\nNyt produkt er tilføjet!");
+        }
+
         private static void EditProduct(Storage storage)
         {
             Console.Clear();
@@ -631,7 +634,7 @@ namespace Genspil
             Console.WriteLine("\nProdukter:");
             foreach (Product p in products)
             {
-                Console.WriteLine(p); 
+                Console.WriteLine(p);
             }
 
             // Vælg produkt-ID
@@ -672,6 +675,100 @@ namespace Genspil
             Console.ReadLine();
         }
 
+        /*public static void AvailableProductsForSelectedGame(Storage storage)
+        {
+            BoardGame selectedGame = SelectBoardGame(storage, "se tilgængelige produkter for");
+
+            // Tjek lager
+            if (selectedGame.CheckAvailability())
+            {
+                // Hent produkter med status = "på lager"
+                List<Product> availableProducts = selectedGame.GetAvailableProducts();
+
+                Console.WriteLine($"Følgende produkter er på lager for spillet '{selectedGame.Name}':");
+                foreach (Product product in availableProducts)
+                {
+                    Console.WriteLine($"- {product}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Ingen produkter på lager for spillet '{selectedGame.Name}'.");
+            }
+        }*/
+
+        private static void SellProduct(Storage storage)
+        {
+            Console.Clear();
+            BoardGame selectedGame = SelectBoardGame(storage, "sælge et produkt fra");
+
+            // Hvis brætspillet ikke har nogen produkter
+            if (selectedGame.Products.Count == 0)
+            {
+                Console.WriteLine("Der er ingen produkter tilknyttet dette spil.");
+                Console.ReadKey();
+                return;
+            }
+
+            // Vis produkter
+            Console.WriteLine("\nProdukter på lager:");
+            foreach (var product in selectedGame.Products)
+            {
+                Console.WriteLine(product);
+            }
+
+            // Vælg produkt via ID
+            int productId = GetValidInt("\nIndtast ID på produktet du vil sælge: ");
+            Product productToSell = selectedGame.Products.FirstOrDefault(p => p.getId() == productId);
+
+            // Tjek om produkt eksisterer
+            if (productToSell == null)
+            {
+                Console.WriteLine("Produkt med det ID blev ikke fundet.");
+            }
+            else
+            {
+                productToSell.Sell();
+            }
+
+            Console.WriteLine("\nTryk på en tast for at vende tilbage til menuen...");
+            Console.ReadKey();
+        }
+
+        private static void ManageRequests(Storage storage)
+        {
+            // Opret en undermenu for forespørgsler
+            int choice = GetMenuChoice("Administrer forespørgsler", new List<string> {
+                "Tilbage til menu",
+                "Opret forespørgsel",
+                "Vis forespørgsler for et spil",
+                "Vis alle forespørgsler",
+                "Slet forespørgsel"
+            });
+
+            if (choice == 0)
+                return;
+
+            switch (choice)
+            {
+                case 1:
+                    AddRequest(storage);
+                    break;
+                case 2:
+                    ShowRequestsPerGame(storage);
+                    break;
+                case 3:
+                    ShowAllRequests(storage);
+                    break;
+                case 4:
+                    DeleteRequest(storage);
+                    break;
+            }
+
+            Console.WriteLine("\nTryk på en tast for at vende tilbage til menuen...");
+            Console.ReadKey();
+            Console.Clear();
+        }
 
         private static void AddRequest(Storage storage)
         {
@@ -738,19 +835,32 @@ namespace Genspil
         
         private static void ShowRequestsPerGame(Storage storage)
         {
-            int choice = GetMenuChoice("Vis forespørgsler for et spil", new List<string> {
-            "Tilbage til menu",
-            "Vælg et spil"
-            });
-
-            if (choice == 0)
-                return;
-
             Console.Clear();
             BoardGame selectedGame = SelectBoardGame(storage, "se forespørgsler for");
-            Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
+            Console.Clear();
+            Console.WriteLine($"\nDu har valgt: {selectedGame.Name} ({selectedGame.Edition}, {selectedGame.Language})\n");
             selectedGame.ShowGameRequests();
-            Console.ReadKey();
+        }
+
+        private static void ShowAllRequests(Storage storage)
+        {
+            Console.Clear();
+            Console.WriteLine("Alle forespørgsler på tværs af spil:\n");
+
+            int total = 0;
+            foreach (var game in storage.GetBoardGames())
+            {
+                foreach (var req in game.Requests)
+                {
+                    Console.WriteLine($"[Spil: {game.Name}] {req}");
+                    total++;
+                }
+            }
+
+            if (total == 0)
+            {
+                Console.WriteLine("Ingen forespørgsler fundet.");
+            }
         }
 
         private static void DeleteRequest(Storage storage)
@@ -830,7 +940,8 @@ namespace Genspil
             Console.WriteLine($"Vælg et boardgame, som du vil {action}:");
             for (int i = 0; i < boardGames.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {boardGames[i].Name}");
+                var game = boardGames[i];
+                Console.WriteLine($"{i + 1}. {game.Name} ({game.Edition}, {game.Language})");
             }
             int selectedIndex = GetValidInt("Indtast nummeret for det ønskede boardgame: ", 1, boardGames.Count);
             return boardGames[selectedIndex - 1];
@@ -850,109 +961,6 @@ namespace Genspil
             }
             return value;
         }
-
-        public static void AddProduct(Storage storage)
-        {
-            BoardGame selectedGame = SelectBoardGame(storage, "tilføje et nyt produkt til");
-            Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
-            UserInputAddNewProduct(selectedGame);
-
-            //Gem ændringer
-            dataHandler.SaveBoardGamesToFile(storage.GetBoardGames());
-            Console.WriteLine("\nOpdateret BoardGame:");
-            Console.WriteLine(selectedGame);
-            Console.ReadLine();
-        }
-
-        internal static void UserInputAddNewProduct(BoardGame game)
-        {
-            // Læs status
-            Console.Write("Indtast produkt status (på lager / reperation): ");
-            string status = Console.ReadLine() ?? "";
-
-            // Læs pris
-            double price;
-            while (true)
-            {
-                Console.Write("Indtast produkt pris (f.eks. 49.99): ");
-                if (double.TryParse(Console.ReadLine(), out price))
-                    break;
-                Console.WriteLine("Ugyldigt input. Indtast en gyldig pris.");
-            }
-
-            // Læs stand 
-            Console.Write("Indtast stand status (god / okay / slidt): ");
-            string stand = Console.ReadLine() ?? "";
-
-            // Opret og tilføj produkt
-            Product newProduct = new Product(status, price, stand); 
-            game.AddNewProduct(newProduct);
-            Console.WriteLine("\nNyt produkt er tilføjet!");
-        }
-
-
-        public static void AvailableProductsForSelectedGame(Storage storage)
-        {
-            BoardGame selectedGame = SelectBoardGame(storage, "se tilgængelige produkter for");
-
-            // Tjek lager
-            if (selectedGame.CheckAvailability())
-            {
-                // Hent produkter med status = "på lager"
-                List<Product> availableProducts = selectedGame.GetAvailableProducts();
-
-                Console.WriteLine($"Følgende produkter er på lager for spillet '{selectedGame.Name}':");
-                foreach (Product product in availableProducts)
-                {
-                    Console.WriteLine($"- {product}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Ingen produkter på lager for spillet '{selectedGame.Name}'.");
-            }
-
-        }
-        private static void SellProduct(Storage storage)
-        {
-            
-
-            Console.Clear();
-            BoardGame selectedGame = SelectBoardGame(storage, "sælge et produkt fra");
-
-            // Hvis brætspillet ikke har nogen produkter
-            if (selectedGame.Products.Count == 0)
-            {
-                Console.WriteLine("Der er ingen produkter tilknyttet dette spil.");
-                Console.ReadKey();
-                return;
-            }
-
-            // Vis produkter
-            Console.WriteLine("\nProdukter på lager:");
-            foreach (var product in selectedGame.Products)
-            {
-                Console.WriteLine(product);
-            }
-
-            // Vælg produkt via ID
-            int productId = GetValidInt("\nIndtast ID på produktet du vil sælge: ");
-            Product productToSell = selectedGame.Products.FirstOrDefault(p => p.getId() == productId);
-
-            // Tjek om produkt eksisterer
-            if (productToSell == null)
-            {
-                Console.WriteLine("Produkt med det ID blev ikke fundet.");
-            }
-            else
-            {
-                productToSell.Sell(); 
-            }
-
-            Console.WriteLine("\nTryk på en tast for at vende tilbage til menuen...");
-            Console.ReadKey();
-        }
-
 
         private static void ReturnToMenu()
         {
