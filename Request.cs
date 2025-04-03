@@ -28,7 +28,7 @@ namespace Genspil
         public override string ToString()
         {
             return $"\nForespørgsel ID: {RequestID}, Dato: {Date.ToShortDateString()} \n" +
-                   $"Kunde: {Customer?.Name} Tlf: {Customer?.Phone} Mail: {Customer?.Email} \n" +
+                   $"Kunde: {Customer?.Name}, Tlf: {Customer?.Phone}, Mail: {Customer?.Email} \n" +
                    $"Medarbejder: {Employee?.Name} ({Employee?.Email}, {Employee?.Phone}), \n" +
                    $"Spil: {BoardGame?.Name}, Udgave: {BoardGame?.Edition}, Sprog: {BoardGame?.Language}";
         }

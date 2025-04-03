@@ -202,8 +202,6 @@ namespace Genspil
             return selectedIndex;
         }
 
-
-
         private static bool HandleMenuSelection(int index, Storage storage)
         {
             Console.CursorVisible = true;
@@ -494,8 +492,6 @@ namespace Genspil
 
         public static void EditBoardGame(Storage storage)
         {
-            
-
             Console.Clear();
             BoardGame selectedGame = SelectBoardGame(storage, "opdatere");
             Console.WriteLine($"\nDu har valgt: {selectedGame.Name}\n");
@@ -520,8 +516,7 @@ namespace Genspil
             //Gem ændringer
             dataHandler.SaveBoardGamesToFile(storage.GetBoardGames());
             Console.ReadLine();
-            Console.Clear();
-            
+            Console.Clear();     
         }
 
         public static void DeleteBoardGame(Storage storage)
@@ -568,7 +563,7 @@ namespace Genspil
                 return;
             }
 
-            if (choice == 2)
+            if (choice == 3)
             {
                 SellProduct(storage);
                 return;
@@ -712,7 +707,7 @@ namespace Genspil
 
             // Vis produkter
             Console.WriteLine("\nProdukter på lager:");
-            foreach (var product in selectedGame.Products)
+            foreach (var product in selectedGame.GetAvailableProducts())
             {
                 Console.WriteLine(product);
             }
@@ -830,7 +825,6 @@ namespace Genspil
             dataHandler.SaveBoardGamesToFile(storage.GetBoardGames());
             Console.WriteLine($"\nForespørgsel oprettet til '{selectedGame.Name}':");
             Console.WriteLine(newRequest);
-            Console.ReadLine();
         }
         
         private static void ShowRequestsPerGame(Storage storage)
@@ -852,7 +846,8 @@ namespace Genspil
             {
                 foreach (var req in game.Requests)
                 {
-                    Console.WriteLine($"[Spil: {game.Name}] {req}");
+                    Console.WriteLine($"[Spil: {game.Name} ({game.Edition}, {game.Language})] {req}");
+                    Console.WriteLine();
                     total++;
                 }
             }

@@ -20,10 +20,6 @@ namespace Genspil
         private string stand;
         private List<Product> soldProducts;
 
-
-
-
-
         public Product(string status, double price, string stand)
 
         {
@@ -49,8 +45,6 @@ namespace Genspil
             }
         }
         public int getId() { return id; }
-
-
         public string getStatus() { return status; }
         public void setStatus(string status) { this.status = status; }
 

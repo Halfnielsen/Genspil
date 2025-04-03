@@ -74,7 +74,6 @@ namespace Genspil
             }
         }
 
-        //Mangler customer og employee
         public void ShowGameRequests()
         {
             if (Requests.Count == 0)
