@@ -4,8 +4,8 @@ Genspil er et konsolbaseret system til håndtering af brætspil, produkter og ku
 Et administrativt værktøj til brætspilsbutikken Genspil. Her kan du tilføje, redigere og søge i spil, håndtere lagerstatus og registrere kunders forespørgsler.
 # Hvordan spiller jeg?
 Projektet køres via Console i Visual Studio eller lignende IDE.
-Naviger med Pil op / ned og vælg med Enter.
-Tast 0 eller Esc for at afslutte eller gå tilbage til menuen.
+- Naviger med Pil op / ned og vælg med Enter.
+- Tast 0 eller Esc for at afslutte eller gå tilbage til menuen.
 # Funktioner
 - Tilføj og rediger brætspil, produkter og forespørgsler
 - Sælg produkter og opdater lagerstatus
