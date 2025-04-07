@@ -299,29 +299,44 @@ namespace Genspil
                 return;
             }
 
-            // Filtrer spil der matcher søgeordet
             List<BoardGame> games = storage.GetBoardGames();
+
+            // Filtrér spil baseret på søgeord og om de har produkter på lager
             var matches = games
                 .Where(game =>
-                    game.Name.ToLower().Contains(query) ||
-                    game.Genre.ToLower().Contains(query) ||
-                    game.Language.ToLower().Contains(query))
+                    (game.Name.ToLower().Contains(query) ||
+                     game.Genre.ToLower().Contains(query) ||
+                     game.Language.ToLower().Contains(query)) &&
+                    game.GetAvailableProducts().Count > 0
+                )
                 .ToList();
 
             Console.Clear();
 
-            // Vis søgeresultater
             if (matches.Count == 0)
             {
-                Console.WriteLine($"Ingen spil matchede søgningen '{query}'.");
+                Console.WriteLine($"Ingen spil matchede søgningen '{query}' (eller ingen har produkter på lager).");
             }
             else
             {
-                Console.WriteLine($"Fundet {matches.Count} spil der matcher '{query}':\n\n");
+                Console.WriteLine($"Fundet {matches.Count} spil der matcher '{query}':\n");
+
+                int count = 1;
                 foreach (var game in matches)
                 {
-                    Console.WriteLine(game);
-                    Console.WriteLine("\n");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"[{count}] ");
+                    Console.ResetColor();
+                    Console.WriteLine($"{game.Name} ({game.Edition}) - {game.Genre}, {game.MinPlayerCount}-{game.MaxPlayerCount} spillere, Sprog: {game.Language}");
+
+                    List<Product> availableProducts = game.GetAvailableProducts();
+                    foreach (Product product in availableProducts)
+                    {
+                        Console.WriteLine($"   └─ {product}");
+                    }
+
+                    Console.WriteLine();
+                    count++;
                 }
             }
 
@@ -329,6 +344,7 @@ namespace Genspil
             Console.ReadKey();
             Console.Clear();
         }
+
         private static void ShowBoardGameList(Storage storage)
         {
             int sortChoice = GetMenuChoice("Vis alle brætspil - Vælg sortering", new List<string>
@@ -438,7 +454,7 @@ namespace Genspil
                 Console.WriteLine("Ugyldigt valg. Prøv igen.");
         }
 
-        private static void AddBoardGame(Storage storage)
+        private static void AddBoardGame(Storage storage, bool promptForProduct = true)
         {
            
             Console.Clear();
@@ -470,22 +486,25 @@ namespace Genspil
             Console.ReadLine();
             Console.Clear();
 
-            
-            int addProductChoice = GetMenuChoice("Vil du tilføje et produkt til spillet?", new List<string> {
-            "Nej",
-            "Tilføj produkt"
-             });
-
-            if (addProductChoice == 1)
+            if (promptForProduct)
             {
-                UserInputAddNewProduct(newGame);
-            }
+                int addProductChoice = GetMenuChoice("Vil du tilføje et produkt til spillet?", new List<string> {
+                 "Nej",
+                 "Tilføj produkt"
+                  });
 
-            Console.WriteLine("\nTryk på en tast for at vende tilbage til menuen...");
+                if (addProductChoice == 1)
+                {
+                    UserInputAddNewProduct(newGame);
+                }
+
+                Console.WriteLine("\nTryk på en tast for at vende tilbage til menuen...");
+                Console.ReadKey();
+            }
 
             // Gem ændringer
             dataHandler.SaveBoardGamesToFile(storage.GetBoardGames());
-            Console.ReadKey();
+            
             Console.Clear();
         }
 
@@ -670,28 +689,6 @@ namespace Genspil
             Console.ReadLine();
         }
 
-        /*public static void AvailableProductsForSelectedGame(Storage storage)
-        {
-            BoardGame selectedGame = SelectBoardGame(storage, "se tilgængelige produkter for");
-
-            // Tjek lager
-            if (selectedGame.CheckAvailability())
-            {
-                // Hent produkter med status = "på lager"
-                List<Product> availableProducts = selectedGame.GetAvailableProducts();
-
-                Console.WriteLine($"Følgende produkter er på lager for spillet '{selectedGame.Name}':");
-                foreach (Product product in availableProducts)
-                {
-                    Console.WriteLine($"- {product}");
-                }
-            }
-            else
-            {
-                Console.WriteLine($"Ingen produkter på lager for spillet '{selectedGame.Name}'.");
-            }
-        }*/
-
         private static void SellProduct(Storage storage)
         {
             Console.Clear();
@@ -780,7 +777,7 @@ namespace Genspil
                     return;
 
                 case 2:
-                    AddBoardGame(storage);
+                    AddBoardGame(storage, promptForProduct: false);
                     break;            
             }
 
